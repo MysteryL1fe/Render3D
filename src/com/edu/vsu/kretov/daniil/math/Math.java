@@ -1,2 +1,4 @@
-package com.edu.vsu.kretov.daniil.math;public class Math {
+package com.edu.vsu.kretov.daniil.math;
+
+public class Math {
 }

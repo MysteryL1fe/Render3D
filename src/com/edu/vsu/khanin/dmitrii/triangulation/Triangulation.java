@@ -1,2 +1,4 @@
-package com.edu.vsu.khanin.dmitrii.triangulation;public class Triangulation {
+package com.edu.vsu.khanin.dmitrii.triangulation;
+
+public class Triangulation {
 }
