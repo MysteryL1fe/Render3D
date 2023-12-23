@@ -1,6 +1,6 @@
 package com.edu.vsu.kretov.daniil.mathLib4Task;
 
-import com.edu.vsu.kretov.daniil.Model.Polygon;
+
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 
 /**

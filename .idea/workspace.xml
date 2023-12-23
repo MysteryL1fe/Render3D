@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Added camera">
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" beforeDir="false" />
+    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Made simple affine transfers v 1.3">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Render3D.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Render3D.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/Model/Model.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/Model/Polygon.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/MathUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/MathUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/vector/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/vector/Vector3f.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,12 +19,16 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -35,21 +42,21 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "last_opened_file_path": "C:/Users/User/IdeaProjects/AISDAll/task_1"
   }
 }]]></component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Asus\IdeaProjects\CG\Render3D\src\com\edu\vsu\khanin\dmitrii\rasterization" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\User\IdeaProjects\ComputerGraphics\Render3D\src\com\edu\vsu\kretov\daniil\math" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.edu.vsu.kretov.daniil.Model" />
+      <recent name="com.edu.vsu.kretov.daniil" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -61,28 +68,42 @@
       <option name="presentableId" value="Default" />
       <updated>1703252645226</updated>
     </task>
-    <task id="LOCAL-00001" summary="Model preparation after reading">
-      <created>1703338145635</created>
+    <task id="LOCAL-00001" summary="Was done package for Math methods first version">
+      <created>1703324430072</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1703338145635</updated>
+      <updated>1703324430072</updated>
     </task>
-    <task id="LOCAL-00002" summary="Completed model preparation after reading">
-      <created>1703345415728</created>
+    <task id="LOCAL-00002" summary="Was done starter tools for model conversion v 1.0">
+      <created>1703324545245</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1703345415728</updated>
+      <updated>1703324545245</updated>
     </task>
-    <task id="LOCAL-00003" summary="Added camera">
-      <created>1703349752936</created>
+    <task id="LOCAL-00003" summary="Was made methods for calculating the cross product were added and the layout was refactored v 1.1">
+      <created>1703339279559</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1703349752936</updated>
+      <updated>1703339279559</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Was updated methods for calculating the cross product v 1.2">
+      <created>1703344653528</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1703344653528</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Made simple affine transfers v 1.3">
+      <created>1703350113426</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1703350113427</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -96,7 +117,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="khanin_dmitrii" />
+                        <option value="kretov_daniil" />
                       </list>
                     </value>
                   </entry>
@@ -109,9 +130,11 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Model preparation after reading" />
-    <MESSAGE value="Completed model preparation after reading" />
-    <MESSAGE value="Added camera" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added camera" />
+    <MESSAGE value="Was done package for Math methods first version" />
+    <MESSAGE value="Was done starter tools for model conversion v 1.0" />
+    <MESSAGE value="Was made methods for calculating the cross product were added and the layout was refactored v 1.1" />
+    <MESSAGE value="Was updated methods for calculating the cross product v 1.2" />
+    <MESSAGE value="Made simple affine transfers v 1.3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made simple affine transfers v 1.3" />
   </component>
 </project>

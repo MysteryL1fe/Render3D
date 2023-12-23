@@ -70,4 +70,32 @@ public class AffineTransformations {
             vertex.set(newX, newY, newZ);
         }
     }
+    public static void MakeInWorldCoord(Model model, float scaleX, float scaleY, float scaleZ,
+                                        float axisX, float axisY, float axisZ, float angle,
+                                        float offsetX, float offsetY, float offsetZ) {
+        // Scale
+        scale(model, scaleX, scaleY, scaleZ);
+
+        // Rotate
+        rotate(model, axisX, axisY, axisZ, angle);
+
+        // Translate
+        translate(model, offsetX, offsetY, offsetZ);
+
+        // Display the transformation matrix
+        displayTransformationMatrix(scaleX, scaleY, scaleZ, axisX, axisY, axisZ, angle, offsetX, offsetY, offsetZ);
+    }
+
+    /**
+     * Displays the transformation matrix.
+     *
+     * @param params The parameters of the transformation.
+     */
+    private static void displayTransformationMatrix(float... params) {
+        System.out.println("Transformation Matrix:");
+        for (int i = 0; i < params.length; i += 3) {
+            System.out.printf("%10.3f %10.3f %10.3f%n", params[i], params[i + 1], params[i + 2]);
+        }
+        System.out.println();
+    }
 }
