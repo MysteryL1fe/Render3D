@@ -3,6 +3,7 @@ package com.edu.vsu.prilepin.maxim;
 import com.edu.vsu.khanin.dmitrii.exceptions.TooLowVerticesException;
 import com.edu.vsu.khanin.dmitrii.preparation.PrepareModel;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.render_engine.Viewport;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.obj.ObjReader;
 import javax.swing.*;
@@ -71,7 +72,7 @@ public class MainFrame extends JFrame {
         add(loadButton);
         add(deleteButton);
 
-        scenePanel = new JPanel();
+        scenePanel = new Viewport();
         scenePanel.setBounds(200, 20, 400, 400);
         scenePanel.setBorder(BorderFactory.createEtchedBorder());
         add(scenePanel);
@@ -242,16 +243,6 @@ public class MainFrame extends JFrame {
         nameField.setText(model.getModelName());
     }
 
-//    private void saveChanges(ModelInScene model) {
-//        model.setLocation(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
-//        model.setRotation(new Vector3f(Float.parseFloat(rotationXField.getText()), Float.parseFloat(rotationYField.getText()), Float.parseFloat(rotationZField.getText())));
-//        model.setScale(new Vector3f(Float.parseFloat(scaleXField.getText()), Float.parseFloat(scaleYField.getText()), Float.parseFloat(scaleZField.getText())));
-//
-//        model.setModelName(nameField.getText());
-//
-//        // Additional logic to update the selected model in the 3D scene
-//        System.out.println("Changes saved for model: " + model.getModelName());
-//    }
 
     private void addModelToScene(ModelInScene model) {
         sceneModels.add(model);
