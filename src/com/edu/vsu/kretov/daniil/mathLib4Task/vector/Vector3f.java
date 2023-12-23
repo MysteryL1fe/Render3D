@@ -753,34 +753,19 @@ public class Vector3f implements Vector<Vector3f> {
         return MathUtils.epsEquals(x * x + y * y + z * z, 0.0f, epsilon);
     }
     /**
-     * Calculates the cross product of this vector and the vector formed by the vertices of the given polygon.
+     * Calculates the cross product of this vector and the given vector.
      *
-     * @param polygon The polygon containing vertex indices.
-     * @param vertices The list of vertices corresponding to the indices in the polygon.
+     * @param v The other vector.
      * @return A new vector representing the cross product.
      */
-    public Vector3f crossWithPolygon(Polygon polygon, ArrayList<Vector3f> vertices) {
-        ArrayList<Integer> vertexIndices = polygon.getVertexIndices();
-
-        // Ensure that the polygon has at least 3 vertices
-        assert vertexIndices.size() >= 3;
-
-        // Get the vectors corresponding to the vertex indices in the polygon
-        Vector3f v1 = vertices.get(vertexIndices.get(0));
-        Vector3f v2 = vertices.get(vertexIndices.get(1));
-        Vector3f v3 = vertices.get(vertexIndices.get(2));
-
-        // Calculate the vectors representing two edges of the polygon
-        Vector3f edge1 = v2.cpy().sub(v1);
-        Vector3f edge2 = v3.cpy().sub(v1);
-
-        // Calculate the cross product of the two edges
-        float newX = edge1.y * edge2.z - edge1.z * edge2.y;
-        float newY = edge1.z * edge2.x - edge1.x * edge2.z;
-        float newZ = edge1.x * edge2.y - edge1.y * edge2.x;
-
+    public Vector3f crossVect(Vector3f v) {
+        float newX = this.y * v.z - this.z * v.y;
+        float newY = this.z * v.x - this.x * v.z;
+        float newZ = this.x * v.y - this.y * v.x;
         return new Vector3f(newX, newY, newZ);
     }
+
+
 
 
 
