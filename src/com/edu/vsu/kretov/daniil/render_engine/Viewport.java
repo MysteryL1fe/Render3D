@@ -1,6 +1,7 @@
 package com.edu.vsu.kretov.daniil.render_engine;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class Viewport extends JPanel implements Runnable, MouseListener, MouseMotionListener {
@@ -9,10 +10,10 @@ public class Viewport extends JPanel implements Runnable, MouseListener, MouseMo
     private boolean isMousePressed = false;
 
     public Viewport() {
-
+        
     }
 
-    public void drawPixel(int x, int y) {
+    public void drawPixel(int x, int y, Color color) {
 
     }
 

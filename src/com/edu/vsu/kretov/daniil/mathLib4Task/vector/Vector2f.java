@@ -98,24 +98,11 @@ public class Vector2f implements Vector<Vector2f> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vector2f v = (Vector2f) o;
-        return this.idt(v);
-    }
-
-    @Override
     public boolean epsEquals(Vector2f v, float epsilon) {
         if (this == v) return true;
         if (v == null) return false;
         if (Math.abs(this.x - v.x) > epsilon) return false;
         return Math.abs(this.y - v.y) <= epsilon;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
     }
 
     @Override
@@ -648,4 +635,16 @@ public class Vector2f implements Vector<Vector2f> {
         return this.x * v.y - this.y * v.x;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector2f vector2f = (Vector2f) o;
+        return Float.compare(vector2f.x, x) == 0 && Float.compare(vector2f.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }
