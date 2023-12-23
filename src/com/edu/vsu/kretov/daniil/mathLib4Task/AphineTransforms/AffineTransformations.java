@@ -3,6 +3,7 @@ package com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.Model;
+import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 
 public class AffineTransformations {
     /**
@@ -44,58 +45,41 @@ public class AffineTransformations {
      * @param axisX The x-component of the rotation axis.
      * @param axisY The y-component of the rotation axis.
      * @param axisZ The z-component of the rotation axis.
-     * @param angle The angle of rotation in radians.
      */
-    public static void rotate(Model model, float axisX, float axisY, float axisZ, float angle) {
-        float cos = (float) Math.cos(angle);
-        float sin = (float) Math.sin(angle);
+    public static void rotate(Model model, float axisX, float axisY, float axisZ) {
+        float cosx = (float) Math.cos(Math.toRadians(axisX));
+        float sinx = (float) Math.sin(Math.toRadians(axisX));
+        float cosy = (float) Math.cos(Math.toRadians(axisY));
+        float siny = (float) Math.sin(Math.toRadians(axisY));
+        float cosz = (float) Math.cos(Math.toRadians(axisZ));
+        float sinz = (float) Math.sin(Math.toRadians(axisZ));
 
         for (Vector3f vertex : model.vertices) {
             float x = vertex.x;
             float y = vertex.y;
             float z = vertex.z;
 
-            float newX = x * (cos + (1 - cos) * axisX * axisX) +
-                    y * ((1 - cos) * axisX * axisY - sin * axisZ) +
-                    z * ((1 - cos) * axisX * axisZ + sin * axisY);
+            float newX = x * (cosx + (1 - cosx) * axisX * axisX) +
+                    y * ((1 - cosy) * axisX * axisY - siny * axisZ) +
+                    z * ((1 - cosz) * axisX * axisZ + sinz * axisY);
 
-            float newY = x * ((1 - cos) * axisY * axisX + sin * axisZ) +
-                    y * (cos + (1 - cos) * axisY * axisY) +
-                    z * ((1 - cos) * axisY * axisZ - sin * axisX);
+            float newY = x * ((1 - cosx) * axisY * axisX + sinx * axisZ) +
+                    y * (cosy + (1 - cosy) * axisY * axisY) +
+                    z * ((1 - cosz) * axisY * axisZ - sinz * axisX);
 
-            float newZ = x * ((1 - cos) * axisZ * axisX - sin * axisY) +
-                    y * ((1 - cos) * axisZ * axisY + sin * axisX) +
-                    z * (cos + (1 - cos) * axisZ * axisZ);
+            float newZ = x * ((1 - cosx) * axisZ * axisX - sinx * axisY) +
+                    y * ((1 - cosy) * axisZ * axisY + siny * axisX) +
+                    z * (cosz + (1 - cosz) * axisZ * axisZ);
 
             vertex.set(newX, newY, newZ);
         }
     }
-    public static void MakeInWorldCoord(Model model, float scaleX, float scaleY, float scaleZ,
-                                        float axisX, float axisY, float axisZ, float angle,
-                                        float offsetX, float offsetY, float offsetZ) {
-        // Scale
-        scale(model, scaleX, scaleY, scaleZ);
+    public static Model MakeInWorldCoord(ModelInScene model) {
+        Model resModel = model.getModel();
+        scale(resModel, model.getScale().x,  model.getScale().y,  model.getScale().z);
+        rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
+        translate(resModel, model.getPosition().x,  model.getPosition().y,  model.getPosition().z);
 
-        // Rotate
-        rotate(model, axisX, axisY, axisZ, angle);
-
-        // Translate
-        translate(model, offsetX, offsetY, offsetZ);
-
-        // Display the transformation matrix
-        displayTransformationMatrix(scaleX, scaleY, scaleZ, axisX, axisY, axisZ, angle, offsetX, offsetY, offsetZ);
-    }
-
-    /**
-     * Displays the transformation matrix.
-     *
-     * @param params The parameters of the transformation.
-     */
-    private static void displayTransformationMatrix(float... params) {
-        System.out.println("Transformation Matrix:");
-        for (int i = 0; i < params.length; i += 3) {
-            System.out.printf("%10.3f %10.3f %10.3f%n", params[i], params[i + 1], params[i + 2]);
-        }
-        System.out.println();
+       return resModel;
     }
 }
