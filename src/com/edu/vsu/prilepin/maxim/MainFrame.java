@@ -14,9 +14,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.awt.Color;
 
+class FileInfo {
+    private final File file;
 
+    public FileInfo(File file) {
+        this.file = file;
+    }
+
+    public String getFileName() {
+        return file.getName();
+    }
+
+}
 public class MainFrame extends JFrame {
     private final JPanel scenePanel;
     private final JPanel propertiesPanel;
@@ -38,12 +51,10 @@ public class MainFrame extends JFrame {
     private final JTextField scaleZField;
 
     private final JTextField nameField;
+    private final JLabel textureNameLabel; // Add a JLabel to display the texture name
+    private final JComboBox<String> colorComboBox; // Add a ComboBox for selecting the model color
 
-    private final JButton loadTextureButton;
-    private final JButton saveButton;
-    private final JButton loadButton;
-    private final JButton deleteButton;
-
+    private FileInfo textureFileInfo; // Create a new class to hold file information
 
 
     public MainFrame() {
@@ -60,15 +71,21 @@ public class MainFrame extends JFrame {
         modelListScrollPane.setBounds(20, 140, 150, 700);
         add(modelListScrollPane);
 
+        textureNameLabel = new JLabel("Название текстуры:");
+        textureNameLabel.setBounds(120, 440, 300, 20);
 
-        loadTextureButton = new JButton("Загрузить текстуру");
-        saveButton = new JButton("Сохранить");
-        loadButton = new JButton("Загрузить модель");
-        deleteButton = new JButton("Удалить модель");
+        colorComboBox = new JComboBox<>(new String[]{"Красный", "Зеленый", "Синий"}); // Populate the ComboBox with color options
+        colorComboBox.setBounds(120, 490, 130, 25);
+
+
+        JButton loadTextureButton = new JButton("Загрузить текстуру");
+        JButton saveButton = new JButton("Сохранить");
+        JButton loadButton = new JButton("Загрузить модель");
+        JButton deleteButton = new JButton("Удалить модель");
         JFrame frame = new JFrame("Model Loader");
 
-        loadTextureButton.setBounds(100, 460, 180, 30);
-        saveButton.setBounds(100, 500, 180, 30);
+        loadTextureButton.setBounds(100, 540, 180, 30);
+        saveButton.setBounds(100, 580, 180, 30);
         loadButton.setBounds(20, 20, 150, 30);
         deleteButton.setBounds(20, 60, 150, 30);
 
@@ -87,6 +104,8 @@ public class MainFrame extends JFrame {
         propertiesPanel.setLayout(null);
         propertiesPanel.add(loadTextureButton);
         propertiesPanel.add(saveButton);
+        propertiesPanel.add(textureNameLabel);
+        propertiesPanel.add(colorComboBox);
 
         JLabel locationLabel = new JLabel("Позиция:");
         locationLabel.setBounds(150, 20, 100, 20);
@@ -137,7 +156,6 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(nameField);
 
 
-        // Добавьте другие свойства объекта по аналогии
 
         add(propertiesPanel);
 
@@ -167,13 +185,24 @@ public class MainFrame extends JFrame {
                     int userSelection = fileChooser.showOpenDialog(frame);
                     if (userSelection == JFileChooser.APPROVE_OPTION) {
                         File selectedFile = fileChooser.getSelectedFile();
-                        // Logic to apply the selected texture to the selected model
-                        // For example:
-                        // selectedModel.setTexture(selectedFile.getAbsolutePath());
+                        textureFileInfo = new FileInfo(selectedFile); // Store the file information
+                        textureNameLabel.setText("Название текстуры: " + textureFileInfo.getFileName()); // Update the texture name label
+                        selectedModel.setTexture(Path.of(selectedFile.getAbsolutePath()));
                         System.out.println("Текстура загружена для модели: " + selectedModel.getModelName());
                     }
                 } else {
                     JOptionPane.showMessageDialog(frame, "Выберите модель для загрузки текстуры");
+                }
+                updateColorComboBoxStatus(); // Update the ComboBox status based on texture selection
+            }
+        });
+
+        colorComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectedModel != null && textureFileInfo != null) {
+                    selectedModel.setColor(getSelectedColorFromComboBox()); // Set the model color based on the ComboBox selection
+                    System.out.println("Установлен цвет для модели: " + selectedModel.getModelName());
                 }
             }
         });
@@ -225,18 +254,18 @@ public class MainFrame extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = jModelList.getSelectedIndex();
-                if (selectedIndex != -1) { // If a model is selected
+                if (selectedIndex != -1) { // Если модель выбрана
                     String selectedModelName = modelList.getElementAt(selectedIndex);
                     modelList.remove(selectedIndex);
 
-                    // Deselect the model
+                    // Модель не является выбранной
                     jModelList.clearSelection();
                     selectedModel = null;
 
-                    // Remove the model from sceneModels
+                    // Удаляет модель из sceneModels
                     sceneModels.remove(selectedIndex);
 
-                    // Clear the properties panel
+                    // Очищает панель свойств
                     clearPropertiesPanel();
 
                     System.out.println("Удалена модель: " + selectedModelName);
@@ -275,6 +304,7 @@ public class MainFrame extends JFrame {
         scaleZField.setText(String.valueOf(model.getScale().z));
 
         nameField.setText(model.getModelName());
+        textureNameLabel.setText("Название текстуры: " + (model.getPath() == null ? "" : model.getPath().toString()));
     }
 
     private void clearPropertiesPanel() {
@@ -291,6 +321,27 @@ public class MainFrame extends JFrame {
         scaleZField.setText("");
 
         nameField.setText("");
+    }
+
+    private void updateColorComboBoxStatus() {
+        if (textureFileInfo != null) {
+            colorComboBox.setEnabled(false); // Enable the ComboBox if a texture is selected
+        } else {
+            colorComboBox.setEnabled(true); // Disable the ComboBox if no texture is selected
+        }
+    }
+
+    private Color getSelectedColorFromComboBox() {
+        switch (colorComboBox.getSelectedIndex()) {
+            case 0:
+                return Color.RED;
+            case 1:
+                return Color.GREEN;
+            case 2:
+                return Color.BLUE;
+            default:
+                return Color.BLACK;
+        }
     }
 
 

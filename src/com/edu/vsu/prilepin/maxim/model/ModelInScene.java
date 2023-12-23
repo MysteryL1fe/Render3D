@@ -62,4 +62,20 @@ public class ModelInScene {
     public void setModel(Model model) {
         this.model = model;
     }
+
+    public void setColor(Color selectedColorFromComboBox) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setTexture(Path path) {
+        this.path = path;
+    }
+
+    public Path getPath() {
+        return path;
+    }
 }
