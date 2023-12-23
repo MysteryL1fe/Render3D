@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Добавил самый обычный интерфейс с кнопками и тд (Основа интерфейса)&#10;Реализация без логики в кнопках и тд.">
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/math/Vector2f.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/math/Vector3f.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/Model.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/ModelInScene.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/Polygon.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/obj/ObjReaderException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Added camera">
+      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/openjfx_javafx_graphics.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/obj/MainFrame.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/obj/MainFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/obj/ObjReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/obj/ObjReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Render3D.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Render3D.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,16 +16,12 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="master" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -47,20 +33,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/azzma/OneDrive/Рабочий стол/3DSoftwareRenderer-master&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\azzma\IdeaProjects\Render3D\src\com\edu\vsu\prilepin\maxim" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.edu.vsu.prilepin.maxim" />
+      <recent name="C:\Users\Asus\IdeaProjects\CG\Render3D\src\com\edu\vsu\khanin\dmitrii\rasterization" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -72,14 +61,28 @@
       <option name="presentableId" value="Default" />
       <updated>1703252645226</updated>
     </task>
-    <task id="LOCAL-00001" summary="Добавил самый обычный интерфейс с кнопками и тд (Основа интерфейса)&#10;Реализация без логики в кнопках и тд.">
-      <created>1703264809706</created>
+    <task id="LOCAL-00001" summary="Model preparation after reading">
+      <created>1703338145635</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1703264809706</updated>
+      <updated>1703338145635</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Completed model preparation after reading">
+      <created>1703345415728</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1703345415728</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added camera">
+      <created>1703349752936</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1703349752936</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -93,7 +96,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/khanin_dmitrii" />
+                        <option value="khanin_dmitrii" />
                       </list>
                     </value>
                   </entry>
@@ -106,7 +109,9 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Добавил самый обычный интерфейс с кнопками и тд (Основа интерфейса)&#10;Реализация без логики в кнопках и тд." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавил самый обычный интерфейс с кнопками и тд (Основа интерфейса)&#10;Реализация без логики в кнопках и тд." />
+    <MESSAGE value="Model preparation after reading" />
+    <MESSAGE value="Completed model preparation after reading" />
+    <MESSAGE value="Added camera" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added camera" />
   </component>
 </project>

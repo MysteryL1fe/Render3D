@@ -1,9 +1,7 @@
 package com.edu.vsu.khanin.dmitrii.preparation;
 
-import com.edu.vsu.khanin.dmitrii.Polygon;
-import com.edu.vsu.khanin.dmitrii.Vector3f;
-
-import java.util.ArrayList;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.prilepin.maxim.model.Polygon;
 
 public class PolygonWithNormal extends Polygon {
     private Vector3f normal;
