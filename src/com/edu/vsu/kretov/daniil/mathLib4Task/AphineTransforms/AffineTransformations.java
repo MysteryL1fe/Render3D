@@ -78,7 +78,7 @@ public class AffineTransformations {
         Model resModel = model.getModel();
         scale(resModel, model.getScale().x,  model.getScale().y,  model.getScale().z);
         rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
-        translate(resModel, model.getPosition().x,  model.getPosition().y,  model.getPosition().z);
+        translate(resModel, model.getLocation().x,  model.getLocation().y,  model.getLocation().z);
 
        return resModel;
     }
