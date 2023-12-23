@@ -1,7 +1,7 @@
 package com.edu.vsu.prilepin.maxim;
 
 import com.edu.vsu.khanin.dmitrii.preparation.PrepareModel;
-import com.edu.vsu.prilepin.maxim.math.Vector3f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.obj.ObjReader;
 import javax.swing.*;

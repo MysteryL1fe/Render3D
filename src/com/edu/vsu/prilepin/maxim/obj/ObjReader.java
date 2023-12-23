@@ -1,6 +1,7 @@
 package com.edu.vsu.prilepin.maxim.obj;
-import com.edu.vsu.prilepin.maxim.math.Vector3f;
-import com.edu.vsu.prilepin.maxim.math.Vector2f;
+
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
 

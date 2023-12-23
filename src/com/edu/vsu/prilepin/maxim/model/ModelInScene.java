@@ -1,7 +1,7 @@
 package com.edu.vsu.prilepin.maxim.model;
 
-import com.edu.vsu.prilepin.maxim.math.Vector2f;
-import com.edu.vsu.prilepin.maxim.math.Vector3f;
+
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 
 public class ModelInScene {
     private String modelName;
