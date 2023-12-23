@@ -39,6 +39,11 @@ public class MainFrame extends JFrame {
 
     private final JTextField nameField;
 
+    private final JButton loadTextureButton;
+    private final JButton saveButton;
+    private final JButton loadButton;
+    private final JButton deleteButton;
+
 
 
     public MainFrame() {
@@ -56,17 +61,16 @@ public class MainFrame extends JFrame {
         add(modelListScrollPane);
 
 
-
-        JButton saveButton = new JButton("Сохранить");
-        JButton loadButton = new JButton("Загрузить модель");
-        JButton deleteButton = new JButton("Удалить модель");
+        loadTextureButton = new JButton("Загрузить текстуру");
+        saveButton = new JButton("Сохранить");
+        loadButton = new JButton("Загрузить модель");
+        deleteButton = new JButton("Удалить модель");
         JFrame frame = new JFrame("Model Loader");
 
-
-        saveButton.setBounds(20, 20, 150, 30);
-        loadButton.setBounds(20, 60, 150, 30);
-        deleteButton.setBounds(20, 100, 150, 30);
-
+        loadTextureButton.setBounds(100, 460, 180, 30);
+        saveButton.setBounds(100, 500, 180, 30);
+        loadButton.setBounds(20, 20, 150, 30);
+        deleteButton.setBounds(20, 60, 150, 30);
 
         add(saveButton);
         add(loadButton);
@@ -81,6 +85,8 @@ public class MainFrame extends JFrame {
         propertiesPanel.setBounds(620, 20, 150, 400);
         propertiesPanel.setBorder(BorderFactory.createTitledBorder("Свойства объекта"));
         propertiesPanel.setLayout(null);
+        propertiesPanel.add(loadTextureButton);
+        propertiesPanel.add(saveButton);
 
         JLabel locationLabel = new JLabel("Позиция:");
         locationLabel.setBounds(150, 20, 100, 20);
@@ -145,9 +151,29 @@ public class MainFrame extends JFrame {
                     selectedModel.setModelName(nameField.getText());
 
                     // Additional logic to update the selected model in the 3D scene
-                    System.out.println("Changes saved for model: " + selectedModel.getModelName());
+                    System.out.println("Изменения сохранены для модели: " + selectedModel.getModelName());
                 } else {
                     JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения изменений");
+                }
+            }
+        });
+
+        loadTextureButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectedModel != null) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Выберите текстурный файл");
+                    int userSelection = fileChooser.showOpenDialog(frame);
+                    if (userSelection == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        // Logic to apply the selected texture to the selected model
+                        // For example:
+                        // selectedModel.setTexture(selectedFile.getAbsolutePath());
+                        System.out.println("Текстура загружена для модели: " + selectedModel.getModelName());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Выберите модель для загрузки текстуры");
                 }
             }
         });
@@ -200,16 +226,24 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = jModelList.getSelectedIndex();
                 if (selectedIndex != -1) { // If a model is selected
-                    String selectedModel = modelList.getElementAt(selectedIndex);
+                    String selectedModelName = modelList.getElementAt(selectedIndex);
                     modelList.remove(selectedIndex);
 
-                    // Удаление модели из sceneModels
+                    // Deselect the model
+                    jModelList.clearSelection();
+                    selectedModel = null;
+
+                    // Remove the model from sceneModels
                     sceneModels.remove(selectedIndex);
 
-                    System.out.println("Удалена модель: " + selectedModel);
+                    // Clear the properties panel
+                    clearPropertiesPanel();
+
+                    System.out.println("Удалена модель: " + selectedModelName);
                 }
             }
         });
+
 
 
 
@@ -241,6 +275,22 @@ public class MainFrame extends JFrame {
         scaleZField.setText(String.valueOf(model.getScale().z));
 
         nameField.setText(model.getModelName());
+    }
+
+    private void clearPropertiesPanel() {
+        locationXField.setText("");
+        locationYField.setText("");
+        locationZField.setText("");
+
+        rotationXField.setText("");
+        rotationYField.setText("");
+        rotationZField.setText("");
+
+        scaleXField.setText("");
+        scaleYField.setText("");
+        scaleZField.setText("");
+
+        nameField.setText("");
     }
 
 
