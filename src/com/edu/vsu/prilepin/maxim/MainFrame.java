@@ -1,5 +1,6 @@
 package com.edu.vsu.prilepin.maxim;
 
+import com.edu.vsu.khanin.dmitrii.exceptions.TooLowVerticesException;
 import com.edu.vsu.khanin.dmitrii.preparation.PrepareModel;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
@@ -24,6 +25,19 @@ public class MainFrame extends JFrame {
 
     private ModelInScene selectedModel;
 
+    private final JTextField locationXField;
+    private final JTextField locationYField;
+    private final JTextField locationZField;
+
+    private final JTextField rotationXField;
+    private final JTextField rotationYField;
+    private final JTextField rotationZField;
+    private final JTextField scaleXField;
+    private final JTextField scaleYField;
+    private final JTextField scaleZField;
+
+    private final JTextField nameField;
+
 
 
     public MainFrame() {
@@ -42,7 +56,7 @@ public class MainFrame extends JFrame {
 
 
 
-        JButton saveButton = new JButton("Сохранить модель");
+        JButton saveButton = new JButton("Сохранить");
         JButton loadButton = new JButton("Загрузить модель");
         JButton deleteButton = new JButton("Удалить модель");
         JFrame frame = new JFrame("Model Loader");
@@ -69,9 +83,9 @@ public class MainFrame extends JFrame {
 
         JLabel locationLabel = new JLabel("Позиция:");
         locationLabel.setBounds(150, 20, 100, 20);
-        JTextField locationXField = new JTextField();
-        JTextField locationYField = new JTextField();
-        JTextField locationZField = new JTextField();
+        locationXField = new JTextField();
+        locationYField = new JTextField();
+        locationZField = new JTextField();
         locationXField.setBounds(120, 50, 130, 25);
         locationYField.setBounds(120, 80, 130, 25);
         locationZField.setBounds(120, 110, 130, 25);
@@ -82,9 +96,9 @@ public class MainFrame extends JFrame {
 
         JLabel rotationLabel = new JLabel("Поворот:");
         rotationLabel.setBounds(150, 140, 100, 20);
-        JTextField rotationXField = new JTextField();
-        JTextField rotationYField = new JTextField();
-        JTextField rotationZField = new JTextField();
+        rotationXField = new JTextField();
+        rotationYField = new JTextField();
+        rotationZField = new JTextField();
         rotationXField.setBounds(120, 170, 130, 25);
         rotationYField.setBounds(120, 200, 130, 25);
         rotationZField.setBounds(120, 230, 130, 25);
@@ -93,11 +107,12 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(rotationYField);
         propertiesPanel.add(rotationZField);
 
+
         JLabel scaleLabel = new JLabel("Масштаб:");
         scaleLabel.setBounds(150, 260, 100, 20);
-        JTextField scaleXField = new JTextField();
-        JTextField scaleYField = new JTextField();
-        JTextField scaleZField = new JTextField();
+        scaleXField = new JTextField();
+        scaleYField = new JTextField();
+        scaleZField = new JTextField();
         scaleXField.setBounds(120, 290, 130, 25);
         scaleYField.setBounds(120, 320, 130, 25);
         scaleZField.setBounds(120, 350, 130, 25);
@@ -106,59 +121,33 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(scaleYField);
         propertiesPanel.add(scaleZField);
 
+
         JLabel nameLabel = new JLabel("Название:");
         nameLabel.setBounds(150, 380, 100, 20);
-        JTextField nameField = new JTextField();
+        nameField = new JTextField();
         nameField.setBounds(120, 410, 130, 25);
         propertiesPanel.add(nameLabel);
         propertiesPanel.add(nameField);
+
 
         // Добавьте другие свойства объекта по аналогии
 
         add(propertiesPanel);
 
-//        private void updatePropertiesPanel(ModelInScene model) {
-//            locationXField.setText(String.valueOf(model.getPosition().getX()));
-//            locationYField.setText(String.valueOf(model.getPosition().getY()));
-//            locationZField.setText(String.valueOf(model.getPosition().getZ()));
-//
-//            rotationXField.setText(String.valueOf(model.getRotation().getX()));
-//            rotationYField.setText(String.valueOf(model.getRotation().getY()));
-//            rotationZField.setText(String.valueOf(model.getRotation().getZ()));
-//
-//            scaleXField.setText(String.valueOf(model.getScale().getX()));
-//            scaleYField.setText(String.valueOf(model.getScale().getY()));
-//            scaleZField.setText(String.valueOf(model.getScale().getZ()));
-//
-//            nameField.setText(model.getModelName());
-//        }
-//
-//        private void saveChanges(ModelInScene model) {
-//            model.getPosition().setX(Float.parseFloat(locationXField.getText()));
-//            model.getPosition().setY(Float.parseFloat(locationYField.getText()));
-//            model.getPosition().setZ(Float.parseFloat(locationZField.getText()));
-//
-//            model.getRotation().setX(Float.parseFloat(rotationXField.getText()));
-//            model.getRotation().setY(Float.parseFloat(rotationYField.getText()));
-//            model.getRotation().setZ(Float.parseFloat(rotationZField.getText()));
-//
-//            model.getScale().setX(Float.parseFloat(scaleXField.getText()));
-//            model.getScale().setY(Float.parseFloat(scaleYField.getText()));
-//            model.getScale().setZ(Float.parseFloat(scaleZField.getText()));
-//
-//            model.setModelName(nameField.getText());
-//
-//            // Additional logic to update the selected model in the 3D scene
-//            System.out.println("Changes saved for model: " + model.getModelName());
-//        }
 
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                if (selectedModel != null) {
-//                    saveChanges(selectedModel);
-//                } else {
-//                    JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения изменений");
-//                }
+                if (selectedModel != null) {
+                    selectedModel.setLocation(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
+                    selectedModel.setRotation(new Vector3f(Float.parseFloat(rotationXField.getText()), Float.parseFloat(rotationYField.getText()), Float.parseFloat(rotationZField.getText())));
+                    selectedModel.setScale(new Vector3f(Float.parseFloat(scaleXField.getText()), Float.parseFloat(scaleYField.getText()), Float.parseFloat(scaleZField.getText())));
+                    selectedModel.setModelName(nameField.getText());
+
+                    // Additional logic to update the selected model in the 3D scene
+                    System.out.println("Changes saved for model: " + selectedModel.getModelName());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения изменений");
+                }
             }
         });
 
@@ -177,8 +166,12 @@ public class MainFrame extends JFrame {
                         Vector3f defaultPosition = new Vector3f(0, 0, 0);
                         Vector3f defaultRotation = new Vector3f(0, 0, 0);
                         Vector3f defaultScale = new Vector3f(1, 1, 1);
-//                        ModelInScene newModel = new ModelInScene(PrepareModel.prepareModel(ObjReader.read(filePath)),selectedFile.getName(), defaultPosition, defaultRotation, defaultScale);
-                        ModelInScene newModel = new ModelInScene(ObjReader.read(filePath),selectedFile.getName(), defaultPosition, defaultRotation, defaultScale);
+                        ModelInScene newModel = null;
+                        try {
+                            newModel = new ModelInScene(PrepareModel.prepareModel(ObjReader.read(filePath)),selectedFile.getName(), defaultPosition, defaultRotation, defaultScale);
+                        } catch (TooLowVerticesException ex) {
+                            JOptionPane.showMessageDialog(propertiesPanel, "Произошла ошибка, выберите другой .obj файл");
+                        }
                         sceneModels.add(newModel);
 
                         // Обновление списка моделей в интерфейсе
@@ -194,11 +187,11 @@ public class MainFrame extends JFrame {
 
         jModelList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-//                int selectedIndex = jModelList.getSelectedIndex();
-//                if (selectedIndex != -1) {
-//                    selectedModel = sceneModels.get(selectedIndex);
-//                    updatePropertiesPanel(selectedModel);
-//                }
+                int selectedIndex = jModelList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                   selectedModel = sceneModels.get(selectedIndex);
+                  updatePropertiesPanel(selectedModel);
+                }
             }
         });
 
@@ -233,6 +226,32 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
+    private void updatePropertiesPanel(ModelInScene model) {
+        locationXField.setText(String.valueOf(model.getLocation().x));
+        locationYField.setText(String.valueOf(model.getLocation().y));
+        locationZField.setText(String.valueOf(model.getLocation().z));
+
+        rotationXField.setText(String.valueOf(model.getRotation().x));
+        rotationYField.setText(String.valueOf(model.getRotation().y));
+        rotationZField.setText(String.valueOf(model.getRotation().z));
+
+        scaleXField.setText(String.valueOf(model.getScale().x));
+        scaleYField.setText(String.valueOf(model.getScale().y));
+        scaleZField.setText(String.valueOf(model.getScale().z));
+
+        nameField.setText(model.getModelName());
+    }
+
+//    private void saveChanges(ModelInScene model) {
+//        model.setLocation(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
+//        model.setRotation(new Vector3f(Float.parseFloat(rotationXField.getText()), Float.parseFloat(rotationYField.getText()), Float.parseFloat(rotationZField.getText())));
+//        model.setScale(new Vector3f(Float.parseFloat(scaleXField.getText()), Float.parseFloat(scaleYField.getText()), Float.parseFloat(scaleZField.getText())));
+//
+//        model.setModelName(nameField.getText());
+//
+//        // Additional logic to update the selected model in the 3D scene
+//        System.out.println("Changes saved for model: " + model.getModelName());
+//    }
 
     private void addModelToScene(ModelInScene model) {
         sceneModels.add(model);
