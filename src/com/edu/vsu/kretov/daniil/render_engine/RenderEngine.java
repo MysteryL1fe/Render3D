@@ -4,8 +4,8 @@ import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.Model;
-import javafx.scene.canvas.GraphicsContext;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.*;
@@ -13,7 +13,7 @@ import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.*;
 public class RenderEngine {
 
     public static void render(
-            final GraphicsContext graphicsContext,
+            final Viewport viewport,
             final Camera camera,
             final Model mesh,
             final int width,
@@ -42,19 +42,19 @@ public class RenderEngine {
             }
 
             for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
-                graphicsContext.strokeLine(
+                /*graphicsContext.strokeLine(
                         resultPoints.get(vertexInPolygonInd - 1).x,
                         resultPoints.get(vertexInPolygonInd - 1).y,
                         resultPoints.get(vertexInPolygonInd).x,
-                        resultPoints.get(vertexInPolygonInd).y);
+                        resultPoints.get(vertexInPolygonInd).y);*/
             }
 
-            if (nVerticesInPolygon > 0)
+            /*if (nVerticesInPolygon > 0)
                 graphicsContext.strokeLine(
                         resultPoints.get(nVerticesInPolygon - 1).x,
                         resultPoints.get(nVerticesInPolygon - 1).y,
                         resultPoints.get(0).x,
-                        resultPoints.get(0).y);
+                        resultPoints.get(0).y);*/
         }
     }
 }
