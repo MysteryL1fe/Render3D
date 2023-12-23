@@ -1,6 +1,6 @@
-package com.edu.vsu.kretov.daniil.math.mathLib4Task.matrix;
+package com.edu.vsu.kretov.daniil.mathLib4Task.matrix;
 
-import com.edu.vsu.kretov.daniil.math.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 
 import java.util.Arrays;
 

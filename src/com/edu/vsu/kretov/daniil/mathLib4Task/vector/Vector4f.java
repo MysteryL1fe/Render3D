@@ -1,6 +1,6 @@
-package com.edu.vsu.kretov.daniil.math.mathLib4Task.vector;
+package com.edu.vsu.kretov.daniil.mathLib4Task.vector;
 
-import com.edu.vsu.kretov.daniil.math.mathLib4Task.MathUtils;
+import com.edu.vsu.kretov.daniil.mathLib4Task.MathUtils;
 
 import java.util.Objects;
 

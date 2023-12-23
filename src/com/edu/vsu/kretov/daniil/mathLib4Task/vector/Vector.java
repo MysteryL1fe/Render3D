@@ -1,4 +1,4 @@
-package com.edu.vsu.kretov.daniil.math.mathLib4Task.vector;
+package com.edu.vsu.kretov.daniil.mathLib4Task.vector;
 
 /**
  * An interface for all mutable vectors.

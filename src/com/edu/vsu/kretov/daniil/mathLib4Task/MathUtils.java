@@ -1,9 +1,9 @@
-package com.edu.vsu.kretov.daniil.math.mathLib4Task;
+package com.edu.vsu.kretov.daniil.mathLib4Task;
 
 /**
  * Common math operations.
  *
- * @author Alexander Laptev
+ * @author Daniil Kretov
  */
 public class MathUtils {
     /**

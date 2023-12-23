@@ -1,4 +1,4 @@
-package com.edu.vsu.kretov.daniil.math.Model;
+package com.edu.vsu.kretov.daniil.Model;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,7 @@
-package com.edu.vsu.kretov.daniil.math.Model;
+package com.edu.vsu.kretov.daniil.Model;
 
-import com.edu.vsu.kretov.daniil.math.mathLib4Task.vector.Vector2f;
-import com.edu.vsu.kretov.daniil.math.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package com.edu.vsu.kretov.daniil.math.mathLib4Task.matrix;
+package com.edu.vsu.kretov.daniil.mathLib4Task.matrix;
 
 /**
  * A mutable square matrix.
