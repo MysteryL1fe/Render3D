@@ -11,10 +11,14 @@ public class Triangle {
     }
 
     public int getColor(int x, int y) {
-        double l1 = (((points[1].getY() - points[2].getY()) * ((double) x - points[2].getX())) + ((points[2].getX() - points[1].getX()) * ((double) y - points[2].getY()))) /
-                (((points[1].getY()) - points[2].getY()) * ((points[0].getX() - points[2].getX())) + ((points[2].getX() - points[1].getX()) * (points[0].getY() - points[2].getY())));
-        double l2 = (((points[2].getY() - points[0].getY()) * ((double) x - points[2].getX())) + ((points[0].getX() - points[2].getX()) * ((double) y - points[2].getY()))) /
-                (((points[1].getY()) - points[2].getY()) * ((points[0].getX() - points[2].getX())) + ((points[2].getX() - points[1].getX()) * (points[0].getY() - points[2].getY())));
+        double l1 = (((points[1].getY() - points[2].getY()) * ((double) x - points[2].getX()))
+                + ((points[2].getX() - points[1].getX()) * ((double) y - points[2].getY()))) /
+                (((points[1].getY()) - points[2].getY()) * ((points[0].getX() - points[2].getX()))
+                        + ((points[2].getX() - points[1].getX()) * (points[0].getY() - points[2].getY())));
+        double l2 = (((points[2].getY() - points[0].getY()) * ((double) x - points[2].getX()))
+                + ((points[0].getX() - points[2].getX()) * ((double) y - points[2].getY()))) /
+                (((points[1].getY()) - points[2].getY()) * ((points[0].getX() - points[2].getX()))
+                        + ((points[2].getX() - points[1].getX()) * (points[0].getY() - points[2].getY())));
         double l3 = 1 - l1 - l2;
 
         int pixelValue = Color.WHITE.getRGB();
@@ -34,4 +38,5 @@ public class Triangle {
         return new Color(r, g, b);
     }
 
-}*/
+}
+*/

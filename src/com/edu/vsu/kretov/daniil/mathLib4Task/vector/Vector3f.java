@@ -1,6 +1,5 @@
 package com.edu.vsu.kretov.daniil.mathLib4Task.vector;
 
-import com.edu.vsu.kretov.daniil.Model.Polygon;
 import com.edu.vsu.kretov.daniil.mathLib4Task.MathUtils;
 
 import java.util.ArrayList;
