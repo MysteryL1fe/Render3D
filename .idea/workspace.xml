@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Made simple affine transfers v 1.3">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Mouse motion and world coordinate transformation was added  v 1.4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/Model/Model.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/Model/Polygon.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/MathUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/MathUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/vector/Vector3f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/vector/Vector3f.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1703350113427</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Mouse motion and world coordinate transformation was added  v 1.4">
+      <created>1703355731287</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1703355731287</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -135,6 +136,7 @@
     <MESSAGE value="Was made methods for calculating the cross product were added and the layout was refactored v 1.1" />
     <MESSAGE value="Was updated methods for calculating the cross product v 1.2" />
     <MESSAGE value="Made simple affine transfers v 1.3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made simple affine transfers v 1.3" />
+    <MESSAGE value="Mouse motion and world coordinate transformation was added  v 1.4" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mouse motion and world coordinate transformation was added  v 1.4" />
   </component>
 </project>
