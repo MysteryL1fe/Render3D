@@ -38,29 +38,26 @@ public class MainFrame extends JFrame {
     private final JPanel propertiesPanel;
     private final DefaultListModel<String> modelList;
     private final JList<String> jModelList;
+    private final ArrayList<ModelInScene> sceneModels;
+    private ModelInScene selectedModel;
     private final JList<String> jCamList;
     private final DefaultListModel<String> camList;
-    private final ArrayList<ModelInScene> sceneModels;
-
-    private ModelInScene selectedModel;
-
+    private Camera selectedCamera;
     private final JTextField locationXField;
     private final JTextField locationYField;
     private final JTextField locationZField;
-
     private final JTextField rotationXField;
     private final JTextField rotationYField;
     private final JTextField rotationZField;
     private final JTextField scaleXField;
     private final JTextField scaleYField;
     private final JTextField scaleZField;
-
     private final JTextField nameField;
     private final JLabel textureNameLabel; // Add a JLabel to display the texture name
     private final JComboBox<String> colorComboBox; // Add a ComboBox for selecting the model color
-
     private FileInfo textureFileInfo; // Create a new class to hold file information
-
+    private Viewport.CameraState cameraState = Viewport.CameraState.MOVE_CAMERA;
+    private Viewport.RenderState renderState = Viewport.RenderState.COLOR;
 
     public MainFrame() {
         setTitle("3D Рендеринг");
@@ -111,7 +108,7 @@ public class MainFrame extends JFrame {
         add(createCameraButton);
         add(deleteCameraButton);
 
-        viewport = new Viewport();
+        viewport = new Viewport(this);
         viewport.setBounds(200, 20, 400, 400);
         viewport.setBorder(BorderFactory.createEtchedBorder());
         add(viewport);
@@ -270,7 +267,7 @@ public class MainFrame extends JFrame {
                             // Обновление списка моделей в интерфейсе
                             modelList.addElement(selectedFile.getName());
 
-                            RenderEngine.render(viewport, camera, sceneModels);
+                            RenderEngine.render(viewport, selectedCamera, sceneModels);
                         } catch (TooLowVerticesException | IOException ex) {
                             JOptionPane.showMessageDialog(propertiesPanel, "Произошла ошибка, выберите другой .obj файл");
                         }
@@ -390,6 +387,18 @@ public class MainFrame extends JFrame {
             modelList.remove(index);
             // Additional logic to remove the selected model from the 3D scene
         }
+    }
+
+    public Camera getSelectedCamera() {
+        return selectedCamera;
+    }
+
+    public Viewport.CameraState getCameraState() {
+        return cameraState;
+    }
+
+    public Viewport.RenderState getRenderState() {
+        return renderState;
     }
 
     public static void main(String[] args) {
