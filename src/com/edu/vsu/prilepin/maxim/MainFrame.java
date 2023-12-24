@@ -35,6 +35,8 @@ public class MainFrame extends JFrame {
     private final JPanel propertiesPanel;
     private final DefaultListModel<String> modelList;
     private final JList<String> jModelList;
+    private final JList<String> jCamList;
+    private final DefaultListModel<String> camList;
     private final ArrayList<ModelInScene> sceneModels;
 
     private ModelInScene selectedModel;
@@ -64,12 +66,19 @@ public class MainFrame extends JFrame {
         sceneModels = new ArrayList<>();
 
         modelList = new DefaultListModel<>();
+        camList = new DefaultListModel<>();
 
         jModelList = new JList<>(modelList);
         jModelList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane modelListScrollPane = new JScrollPane(jModelList);
-        modelListScrollPane.setBounds(20, 140, 150, 700);
+        modelListScrollPane.setBounds(20, 100, 150, 300);
         add(modelListScrollPane);
+
+        jCamList = new JList<>();
+        jCamList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane camListScrollPane = new JScrollPane(jCamList);
+        camListScrollPane.setBounds(20, 500, 150, 300);
+        add(camListScrollPane);
 
         textureNameLabel = new JLabel("Название текстуры:");
         textureNameLabel.setBounds(120, 440, 300, 20);
@@ -83,15 +92,21 @@ public class MainFrame extends JFrame {
         JButton loadButton = new JButton("Загрузить модель");
         JButton deleteButton = new JButton("Удалить модель");
         JFrame frame = new JFrame("Model Loader");
+        JButton createCameraButton = new JButton("Добавить камеру");
+        JButton deleteCameraButton = new JButton("Удалить камеру");
 
         loadTextureButton.setBounds(100, 540, 180, 30);
         saveButton.setBounds(100, 580, 180, 30);
         loadButton.setBounds(20, 20, 150, 30);
         deleteButton.setBounds(20, 60, 150, 30);
+        createCameraButton.setBounds(20, 420, 150, 30);
+        deleteCameraButton.setBounds(20, 460, 150, 30);
 
         add(saveButton);
         add(loadButton);
         add(deleteButton);
+        add(createCameraButton);
+        add(deleteCameraButton);
 
         scenePanel = new Viewport();
         scenePanel.setBounds(200, 20, 400, 400);
@@ -175,6 +190,27 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+
+        createCameraButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newCameraName = "Camera" + (camList.getSize() + 1); // Генерация нового имени камеры
+                camList.addElement(newCameraName); // Добавление новой камеры в список
+                jCamList.setModel(camList); // Обновление отображения списка камер
+            }
+        });
+
+        deleteCameraButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = jCamList.getSelectedIndex();
+                if (selectedIndex != -1 && camList.size() > 1) {
+                    camList.remove(selectedIndex);
+                    jCamList.setModel(camList); // Обновление jCamList
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Нельзя удалить последнюю камеру");
+                }
+            }
+        });
+
 
         loadTextureButton.addActionListener(new ActionListener() {
             @Override
@@ -274,7 +310,8 @@ public class MainFrame extends JFrame {
         });
 
 
-
+        camList.addElement("Camera1");
+        jCamList.setModel(camList);
 
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -324,24 +361,17 @@ public class MainFrame extends JFrame {
     }
 
     private void updateColorComboBoxStatus() {
-        if (textureFileInfo != null) {
-            colorComboBox.setEnabled(false); // Enable the ComboBox if a texture is selected
-        } else {
-            colorComboBox.setEnabled(true); // Disable the ComboBox if no texture is selected
-        }
+        // Disable the ComboBox if no texture is selected
+        colorComboBox.setEnabled(textureFileInfo == null); // Enable the ComboBox if a texture is selected
     }
 
     private Color getSelectedColorFromComboBox() {
-        switch (colorComboBox.getSelectedIndex()) {
-            case 0:
-                return Color.RED;
-            case 1:
-                return Color.GREEN;
-            case 2:
-                return Color.BLUE;
-            default:
-                return Color.BLACK;
-        }
+        return switch (colorComboBox.getSelectedIndex()) {
+            case 0 -> Color.RED;
+            case 1 -> Color.GREEN;
+            case 2 -> Color.BLUE;
+            default -> Color.BLACK;
+        };
     }
 
 
