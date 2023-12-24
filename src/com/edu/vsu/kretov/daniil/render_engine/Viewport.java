@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Viewport extends JPanel implements Runnable, MouseListener, KeyListener, MouseWheelListener {
+public class Viewport extends JPanel implements MouseListener, KeyListener, MouseWheelListener {
     private final MainFrame mainFrame;
     //private float XCameraPosition = 0;
     //private float YCameryPosition = 0;
@@ -30,11 +30,10 @@ public class Viewport extends JPanel implements Runnable, MouseListener, KeyList
         g.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
     }
 
-    @Override
-    public void run() {
-
+    public void clear() {
+        Graphics g = this.getGraphics();
+        g.clearRect(0, 0, getBounds().width, getBounds().height);
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {

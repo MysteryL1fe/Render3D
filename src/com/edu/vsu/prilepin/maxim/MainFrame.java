@@ -80,6 +80,8 @@ public class MainFrame extends JFrame {
         camListScrollPane.setBounds(20, 500, 150, 300);
         add(camListScrollPane);
 
+        selectedCamera = new Camera(new Vector3f(50, 50, 50), new Vector3f(0, 0, 0), 1, 1, 0.1f, 100);
+
         textureNameLabel = new JLabel("Название текстуры:");
         textureNameLabel.setBounds(120, 440, 300, 20);
 

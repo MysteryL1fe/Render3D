@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Minimal Z-Buffered render">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="added hotkeys for camera">
+      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/ColorRasterization.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/RasterizationAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/preparation/PrepareModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/preparation/PrepareModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/matrix/Matrix4f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/matrix/Matrix4f.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/GraphicConveyor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/GraphicConveyor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/Rasterization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/BarycentricCoordinates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/ModelInScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/ModelInScene.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +22,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -130,7 +130,21 @@
       <option name="project" value="LOCAL" />
       <updated>1703362117303</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Completed mimimal render">
+      <created>1703379009874</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1703379009874</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added hotkeys for camera">
+      <created>1703413066709</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1703413066709</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -163,27 +177,8 @@
     <MESSAGE value="Прописал некоторые кейсы с ошибками" />
     <MESSAGE value="Помогите" />
     <MESSAGE value="Minimal Z-Buffered render" />
-    <option name="LAST_COMMIT_MESSAGE" value="Minimal Z-Buffered render" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java</url>
-          <line>72</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java</url>
-          <line>27</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Completed mimimal render" />
+    <MESSAGE value="added hotkeys for camera" />
+    <option name="LAST_COMMIT_MESSAGE" value="added hotkeys for camera" />
   </component>
 </project>

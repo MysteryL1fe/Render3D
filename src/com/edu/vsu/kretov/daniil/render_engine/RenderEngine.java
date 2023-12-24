@@ -1,85 +1,73 @@
 package com.edu.vsu.kretov.daniil.render_engine;
 
-import com.edu.vsu.khanin.dmitrii.rasterization.Rasterization;
-import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
+import com.edu.vsu.khanin.dmitrii.rasterization.ColorRasterization;
+import com.edu.vsu.khanin.dmitrii.rasterization.RasterizationAlgorithm;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
-import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
-import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
-import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
-import com.edu.vsu.prilepin.maxim.model.Polygon;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {
+    private static RenderThread renderThread;
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels) {
-        Matrix4f modelMatrix = rotateScaleTranslate();
-        Matrix4f viewMatrix = camera.getViewMatrix();
-        Matrix4f projectionMatrix = camera.getProjectionMatrix();
+        render(viewport, camera, sceneModels, new ColorRasterization());
+    }
 
-        Matrix4f modelViewProjectionMatrix = new Matrix4f(modelMatrix);
-        modelViewProjectionMatrix.mul(viewMatrix);
-        modelViewProjectionMatrix.mul(projectionMatrix);
+    public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
+                              ColorRasterization rasterizationAlgorithm) {
+        if (renderThread != null) renderThread.stopRender();
 
-        HashMap<Vector2f, ZBufferColor> zBuffer = new HashMap<>();
+        viewport.clear();
 
-        for (ModelInScene model : sceneModels) {
-            Model mesh = AffineTransformations.MakeInWorldCoord(model);
-            for (Polygon polygon : mesh.polygons) {
-                Vector3f v1 = multiplyMatrix4ByVector3(modelViewProjectionMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
-                Vector3f v2 = multiplyMatrix4ByVector3(modelViewProjectionMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
-                Vector3f v3 = multiplyMatrix4ByVector3(modelViewProjectionMatrix, mesh.vertices.get(polygon.getVertexIndices().get(2)).cpy());
+        renderThread = new RenderThread(viewport, camera, sceneModels, rasterizationAlgorithm);
+        renderThread.start();
+    }
 
-                float minX = Math.min(Math.min(v1.x, v2.x), v3.x);
-                float maxX = Math.max(Math.max(v1.x, v2.x), v3.x);
-                float minY = Math.min(Math.min(v1.y, v2.y), v3.y);
-                float maxY = Math.max(Math.max(v1.y, v2.y), v3.y);
-                float minZ = Math.min(Math.min(v1.z, v2.z), v3.z);
-                float maxZ = Math.max(Math.max(v1.z, v2.z), v3.z);
+    private static class RenderThread extends Thread {
+        private boolean isRenderActive;
+        private final Viewport viewport;
+        private final Camera camera;
+        private final ArrayList<ModelInScene> sceneModels;
+        private final RasterizationAlgorithm rasterizationAlgorithm;
 
-                if (minX > 1 || maxX < -1 || minY > 1 || maxY < -1 || minZ > 1 || maxZ < -1) continue;
+        public RenderThread(Viewport viewport, Camera camera, ArrayList<ModelInScene> sceneModels,
+                            RasterizationAlgorithm rasterizationAlgorithm) {
+            this.viewport = viewport;
+            this.camera = camera;
+            this.sceneModels = sceneModels;
+            this.rasterizationAlgorithm = rasterizationAlgorithm;
+        }
 
-                minX = Math.max(minX, -1);
-                maxX = Math.min(maxX, 1);
-                minY = Math.max(minY, -1);
-                maxY = Math.min(maxY, 1);
+        @Override
+        public void run() {
+            super.run();
+            isRenderActive = true;
 
-                for (float x = minX; x <= maxX; x += (float) 1 / viewport.getBounds().width) {
-                    for (float y = minY; y <= maxY; y += (float) 1 / viewport.getBounds().height) {
-                        Vector3f barycentricCoords = Rasterization.toBarycentricCoordinates(x, y, v1, v2, v3);
-                        float z = barycentricCoords.x * v1.z + barycentricCoords.y * v2.z + barycentricCoords.z * v3.z;
+            Matrix4f modelMatrix = rotateScaleTranslate();
+            Matrix4f viewMatrix = camera.getViewMatrix();
+            Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
-                        if (Math.abs(z) > 1) continue;
+            Matrix4f modelViewProjectionMatrix = new Matrix4f(modelMatrix);
+            modelViewProjectionMatrix.mul(viewMatrix);
+            modelViewProjectionMatrix.mul(projectionMatrix);
 
-                        int newX = (int) (x * viewport.getBounds().width + viewport.getBounds().width / 2.0F);
-                        int newY = (int) (-y * viewport.getBounds().height + viewport.getBounds().height / 2.0F);
-                        Vector2f pixel = new Vector2f(newX, newY);
-                        if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z)
-                            zBuffer.put(pixel, new ZBufferColor(z,
-                                    barycentricCoords.x == 0 || barycentricCoords.y == 0
-                                            || barycentricCoords.z == 0 ? Color.BLACK : model.getColor()
-                            ));
-                    }
-                }
+            HashSet<RasterizationAlgorithm.ColorPixel> pixels = rasterizationAlgorithm.rasterization(
+                    sceneModels, modelViewProjectionMatrix, viewport.getBounds().width, viewport.getBounds().height
+            );
+
+            for (RasterizationAlgorithm.ColorPixel pixel : pixels) {
+                if (!isRenderActive) break;
+                viewport.drawPixel(pixel.x, pixel.y, pixel.color);
             }
         }
 
-        for (Vector2f pixel : zBuffer.keySet())
-            viewport.drawPixel((int) pixel.x, (int) pixel.y, zBuffer.get(pixel).color);
-    }
-
-    private static class ZBufferColor {
-        public float zBuffer;
-        public Color color;
-
-        public ZBufferColor(float zBuffer, Color color) {
-            this.zBuffer = zBuffer;
-            this.color = color;
+        public void stopRender() {
+            isRenderActive = false;
+            System.out.println("Stop render");
         }
     }
 }
