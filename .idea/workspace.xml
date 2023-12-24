@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Помогите">
+    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="Minimal Z-Buffered render">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/preparation/PrepareModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/preparation/PrepareModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/matrix/Matrix4f.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/matrix/Matrix4f.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/GraphicConveyor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/GraphicConveyor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/ModelInScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/model/ModelInScene.java" afterDir="false" />
     </list>
@@ -41,10 +46,18 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/azzma/OneDrive/Рабочий стол/3DSoftwareRenderer-master&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Asus/IdeaProjects/CG/CGVSU-main/Task4/Simple3DViewer&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -54,6 +67,17 @@
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.edu.vsu.prilepin.maxim" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.edu.vsu.prilepin.maxim.MainFrame" />
+      <module name="Render3D" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -99,7 +123,14 @@
       <option name="project" value="LOCAL" />
       <updated>1703352692900</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Minimal Z-Buffered render">
+      <created>1703362117303</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1703362117303</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -113,7 +144,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/khanin_dmitrii" />
+                        <option value="khanin_dmitrii" />
                       </list>
                     </value>
                   </entry>
@@ -131,6 +162,28 @@
     <MESSAGE value="Обновил математику на Данилову" />
     <MESSAGE value="Прописал некоторые кейсы с ошибками" />
     <MESSAGE value="Помогите" />
-    <option name="LAST_COMMIT_MESSAGE" value="Помогите" />
+    <MESSAGE value="Minimal Z-Buffered render" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minimal Z-Buffered render" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java</url>
+          <line>20</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

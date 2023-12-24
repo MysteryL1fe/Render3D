@@ -20,13 +20,9 @@ public class GraphicConveyor {
     }
 
     public static Matrix4f lookAt(Vector3f eye, Vector3f target, Vector3f up) {
-        Vector3f resultX = new Vector3f();
-        Vector3f resultY = new Vector3f();
-        Vector3f resultZ = new Vector3f();
-
-        resultZ = target.sub(eye);
-        resultX = up.crs(resultZ);
-        resultY = resultZ.crs(resultX);
+        Vector3f resultZ = target.cpy().sub(eye);
+        Vector3f resultX = up.cpy().crs(resultZ);
+        Vector3f resultY = resultZ.cpy().crs(resultX);
 
         resultX.nor();
         resultY.nor();

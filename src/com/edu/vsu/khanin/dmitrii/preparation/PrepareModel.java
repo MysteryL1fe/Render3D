@@ -23,13 +23,13 @@ public class PrepareModel {
 
             ArrayList<Integer> vertexIndices = polygon.getVertexIndices();
 
-            Vector3f vertex1 = model.vertices.get(vertexIndices.get(0) - 1);
-            Vector3f vertex2 = model.vertices.get(vertexIndices.get(1) - 1);
-            Vector3f vertex3 = model.vertices.get(vertexIndices.get(2) - 1);
+            Vector3f vertex1 = model.vertices.get(vertexIndices.get(0));
+            Vector3f vertex2 = model.vertices.get(vertexIndices.get(1));
+            Vector3f vertex3 = model.vertices.get(vertexIndices.get(2));
 
             Vector3f normal = MathUtils.normalizePolygon(vertex1, vertex2, vertex3);
 
-            if (model.normals.size() > polygon.getNormalIndices().get(0)) {
+            if (polygon.getNormalIndices().size() > 0 && model.normals.size() > polygon.getNormalIndices().get(0)) {
                 Vector3f vertexNormal = model.normals.get(polygon.getNormalIndices().get(0));
 
                 if (vertexNormal.dot(normal) < 0) normal.scl(-1);

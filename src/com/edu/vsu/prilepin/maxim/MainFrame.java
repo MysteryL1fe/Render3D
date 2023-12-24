@@ -3,6 +3,8 @@ package com.edu.vsu.prilepin.maxim;
 import com.edu.vsu.khanin.dmitrii.exceptions.TooLowVerticesException;
 import com.edu.vsu.khanin.dmitrii.preparation.PrepareModel;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.render_engine.Camera;
+import com.edu.vsu.kretov.daniil.render_engine.RenderEngine;
 import com.edu.vsu.kretov.daniil.render_engine.Viewport;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.obj.ObjReader;
@@ -14,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -31,7 +34,7 @@ class FileInfo {
 
 }
 public class MainFrame extends JFrame {
-    private final JPanel scenePanel;
+    private final Viewport viewport;
     private final JPanel propertiesPanel;
     private final DefaultListModel<String> modelList;
     private final JList<String> jModelList;
@@ -108,10 +111,10 @@ public class MainFrame extends JFrame {
         add(createCameraButton);
         add(deleteCameraButton);
 
-        scenePanel = new Viewport();
-        scenePanel.setBounds(200, 20, 400, 400);
-        scenePanel.setBorder(BorderFactory.createEtchedBorder());
-        add(scenePanel);
+        viewport = new Viewport();
+        viewport.setBounds(200, 20, 400, 400);
+        viewport.setBorder(BorderFactory.createEtchedBorder());
+        add(viewport);
 
         propertiesPanel = new JPanel();
         propertiesPanel.setBounds(620, 20, 150, 400);
@@ -176,7 +179,7 @@ public class MainFrame extends JFrame {
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (selectedModel != null) {
-                    selectedModel.setLocation(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
+                    selectedModel.setPosition(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
                     selectedModel.setRotation(new Vector3f(Float.parseFloat(rotationXField.getText()), Float.parseFloat(rotationYField.getText()), Float.parseFloat(rotationZField.getText())));
                     selectedModel.setScale(new Vector3f(Float.parseFloat(scaleXField.getText()), Float.parseFloat(scaleYField.getText()), Float.parseFloat(scaleZField.getText())));
                     selectedModel.setModelName(nameField.getText());
@@ -256,18 +259,21 @@ public class MainFrame extends JFrame {
                         Vector3f defaultPosition = new Vector3f(0, 0, 0);
                         Vector3f defaultRotation = new Vector3f(0, 0, 0);
                         Vector3f defaultScale = new Vector3f(1, 1, 1);
-                        ModelInScene newModel = null;
                         try {
-                            newModel = new ModelInScene(PrepareModel.prepareModel(ObjReader.read(filePath)),selectedFile.getName(), defaultPosition, defaultRotation, defaultScale);
-                        } catch (TooLowVerticesException ex) {
+                            ModelInScene newModel = new ModelInScene(
+                                    PrepareModel.prepareModel(ObjReader.read(Path.of(filePath))),
+                                    selectedFile.getName(), defaultPosition, defaultRotation, defaultScale
+                            );
+
+                            sceneModels.add(newModel);
+
+                            // Обновление списка моделей в интерфейсе
+                            modelList.addElement(selectedFile.getName());
+
+                            RenderEngine.render(viewport, camera, sceneModels);
+                        } catch (TooLowVerticesException | IOException ex) {
                             JOptionPane.showMessageDialog(propertiesPanel, "Произошла ошибка, выберите другой .obj файл");
                         }
-                        sceneModels.add(newModel);
-
-                        // Обновление списка моделей в интерфейсе
-                        modelList.addElement(selectedFile.getName());
-
-                        System.out.println("Выбран .obj файл: " + filePath);
                     } else {
                         JOptionPane.showMessageDialog(frame, "Пожалуйста, выберите .obj файл");
                     }
@@ -315,7 +321,7 @@ public class MainFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
                 int height = getHeight();
-                scenePanel.setSize((int) (width * 0.5), height - 40);
+                viewport.setSize((int) (width * 0.5), height - 40);
                 propertiesPanel.setLocation((int) (width * 0.75), 20);
                 propertiesPanel.setSize((int) (width * 0.25) - 20, height - 40);
             }
@@ -326,9 +332,9 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
     private void updatePropertiesPanel(ModelInScene model) {
-        locationXField.setText(String.valueOf(model.getLocation().x));
-        locationYField.setText(String.valueOf(model.getLocation().y));
-        locationZField.setText(String.valueOf(model.getLocation().z));
+        locationXField.setText(String.valueOf(model.getPosition().x));
+        locationYField.setText(String.valueOf(model.getPosition().y));
+        locationZField.setText(String.valueOf(model.getPosition().z));
 
         rotationXField.setText(String.valueOf(model.getRotation().x));
         rotationYField.setText(String.valueOf(model.getRotation().y));

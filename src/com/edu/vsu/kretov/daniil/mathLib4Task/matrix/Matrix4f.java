@@ -10,20 +10,20 @@ import java.util.Arrays;
 public class Matrix4f implements Matrix<Matrix4f> {
     // Indices for the matrix values.
     public static final int M11 = 0;
-    public static final int M12 = 4;
-    public static final int M13 = 8;
-    public static final int M14 = 12;
-    public static final int M21 = 1;
+    public static final int M12 = 1;
+    public static final int M13 = 2;
+    public static final int M14 = 3;
+    public static final int M21 = 4;
     public static final int M22 = 5;
-    public static final int M23 = 9;
-    public static final int M24 = 13;
-    public static final int M31 = 2;
-    public static final int M32 = 6;
+    public static final int M23 = 6;
+    public static final int M24 = 7;
+    public static final int M31 = 8;
+    public static final int M32 = 9;
     public static final int M33 = 10;
-    public static final int M34 = 14;
-    public static final int M41 = 3;
-    public static final int M42 = 7;
-    public static final int M43 = 11;
+    public static final int M34 = 11;
+    public static final int M41 = 12;
+    public static final int M42 = 13;
+    public static final int M43 = 14;
     public static final int M44 = 15;
     public static final int LEN = 16;
 

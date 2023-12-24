@@ -1,5 +1,7 @@
 package com.edu.vsu.kretov.daniil.render_engine;
 
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,7 +17,15 @@ public class Viewport extends JPanel implements Runnable, MouseListener, MouseMo
     }
 
     public void drawPixel(int x, int y, Color color) {
+        Graphics g = this.getGraphics();
+        g.setColor(color);
+        g.drawLine(x, y, x, y);
+    }
 
+    public void drawLine(Vector2f start, Vector2f end) {
+        Graphics g = this.getGraphics();
+        g.setColor(Color.BLACK);
+        g.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
     }
 
     @Override

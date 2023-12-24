@@ -3,12 +3,17 @@ package com.edu.vsu.prilepin.maxim.model;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 
+import java.awt.*;
+import java.nio.file.Path;
+
 public class ModelInScene {
     private String modelName;
     private Vector3f position;
     private Vector3f rotation;
     private Vector3f scale;
     private Model model;
+    private Color color;
+    private Path path;
 
     public ModelInScene(Model model, String modelName, Vector3f position, Vector3f rotation, Vector3f scale) {
         this.model = model;
@@ -16,6 +21,7 @@ public class ModelInScene {
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
+        this.color = Color.RED;
     }
 
     public String getModelName() {
