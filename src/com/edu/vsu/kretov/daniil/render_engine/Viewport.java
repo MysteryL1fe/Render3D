@@ -7,6 +7,7 @@ import java.awt.event.*;
 public class Viewport extends JPanel implements Runnable, MouseListener, MouseMotionListener {
     private float XCameraPosition = 0;
     private float YCameryPosition = 0;
+    private int newX = 0, newY = 0;
     private boolean isMousePressed = false;
 
     public Viewport() {
@@ -30,11 +31,16 @@ public class Viewport extends JPanel implements Runnable, MouseListener, MouseMo
 
     @Override
     public void mousePressed(MouseEvent e) {
+        newX = 99999;
+        newY = 99999;
         isMousePressed = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        int x0 = 99999;
+        int y0 = 99999;
+
         isMousePressed = false;
     }
 
@@ -50,13 +56,14 @@ public class Viewport extends JPanel implements Runnable, MouseListener, MouseMo
 
     @Override
     public void mouseMoved(MouseEvent e) {
+         newX = e.getX();
+         newY = e.getY();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         if (isMousePressed) {
-            int newX = e.getX();
-            int newY = e.getY();
+
 
             // Определение направления движения
             if (newX > XCameraPosition) {
