@@ -54,7 +54,7 @@ public class ContourRasterization implements RasterizationAlgorithm {
 
                         float eps = 0.01f;
                         if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
-                            colorPixels.add(new ColorPixel(newX, newY, Color.BLACK));
+                            colorPixels.add(new ColorPixel(new Pixel(newX, newY), Color.BLACK));
                     }
                 }
             }

@@ -1,13 +1,18 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
-import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
+import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,14 +20,14 @@ import java.util.Objects;
 
 import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
 
-public class ColorRasterization implements RasterizationAlgorithm {
+public class TextureRasterization implements RasterizationAlgorithm {
     @Override
     public HashSet<ColorPixel> rasterization(ArrayList<ModelInScene> sceneModels, Matrix4f mVPMatrix, int width, int height) {
         HashSet<ColorPixel> colorPixels = new HashSet<>();
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
-            Model mesh = AffineTransformations.makeInWorldCoord(model);
+            Model mesh = AffineTransformations.MakeInWorldCoord(model);
             for (Polygon polygon : mesh.polygons) {
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
@@ -42,13 +47,30 @@ public class ColorRasterization implements RasterizationAlgorithm {
                 minY = Math.max(minY, -1);
                 maxY = Math.min(maxY, 1);
 
+                BufferedImage img = null;
+
+                int textureIndex1 = -1;
+                int textureIndex2 = -1;
+                int textureIndex3 = -1;
+
+                if (polygon.getTextureVertexIndices().size() >= 3) {
+                    textureIndex1 = polygon.getTextureVertexIndices().get(0);
+                    textureIndex2 = polygon.getTextureVertexIndices().get(1);
+                    textureIndex3 = polygon.getTextureVertexIndices().get(2);
+
+                    if (model.getPath() != null) {
+                        try {
+                            img = ImageIO.read(model.getPath().toFile());
+                        } catch (IOException ignored) {
+                        }
+                    }
+                }
+
                 for (float x = minX; x <= maxX; x += (float) 1 / width) {
                     for (float y = minY; y <= maxY; y += (float) 1 / height) {
                         Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(x, y, v1, v2, v3);
 
-                        if (barycentricCoords.x < 0 || barycentricCoords.y < 0 || barycentricCoords.z < 0
-                                || barycentricCoords.x > 1 || barycentricCoords.y > 1 || barycentricCoords.z > 1)
-                            continue;
+                        if (barycentricCoords.x < 0 || barycentricCoords.y < 0 || barycentricCoords.z < 0) continue;
 
                         float z = barycentricCoords.x * v1.z + barycentricCoords.y * v2.z + barycentricCoords.z * v3.z;
 
@@ -58,10 +80,30 @@ public class ColorRasterization implements RasterizationAlgorithm {
                         int newY = (int) (-y * height + height / 2.0F);
                         Pixel pixel = new Pixel(newX, newY);
                         if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
-                            float eps = 0.01f;
-                            if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
-                                zBuffer.put(pixel, new ZBufferColor(z, Color.BLACK));
-                            else zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
+                            if (img != null) {
+                                // set pixel color from texture
+                                Vector2f textureCoords1 = mesh.textureVertices.get(textureIndex1);
+                                Vector2f textureCoords2 = mesh.textureVertices.get(textureIndex2);
+                                Vector2f textureCoords3 = mesh.textureVertices.get(textureIndex3);
+
+                                Vector2f textureCoords = new Vector2f(
+                                        (textureCoords1.x * barycentricCoords.x
+                                                + textureCoords2.x * barycentricCoords.y
+                                                + textureCoords3.x * barycentricCoords.z) * img.getWidth(),
+                                        (textureCoords1.y * barycentricCoords.x
+                                                + textureCoords2.y * barycentricCoords.y
+                                                + textureCoords3.y * barycentricCoords.z) * img.getHeight()
+                                );
+
+                                int color = img.getRGB((int) textureCoords.x, (int) textureCoords.y);
+                                int red = (color >> 16) & 0xff;
+                                int green = (color >> 8) & 0xff;
+                                int blue = (color) & 0xff;
+                                zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
+                            } else {
+                                // set pixel from model's color
+                                zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
+                            }
                         }
                     }
                 }
