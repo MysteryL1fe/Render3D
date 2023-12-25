@@ -8,6 +8,7 @@ import com.edu.vsu.kretov.daniil.render_engine.RenderEngine;
 import com.edu.vsu.kretov.daniil.render_engine.Viewport;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.obj.ObjReader;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -31,8 +32,8 @@ class FileInfo {
     public String getFileName() {
         return file.getName();
     }
-
 }
+
 public class MainFrame extends JFrame {
     private final Viewport viewport;
     private final JPanel propertiesPanel;
@@ -56,8 +57,8 @@ public class MainFrame extends JFrame {
     private final JLabel textureNameLabel; // Add a JLabel to display the texture name
     private final JComboBox<String> colorComboBox; // Add a ComboBox for selecting the model color
     private FileInfo textureFileInfo; // Create a new class to hold file information
-    private Viewport.CameraState cameraState = Viewport.CameraState.MOVE_CAMERA;
-    private Viewport.RenderState renderState = Viewport.RenderState.COLOR;
+    private CameraState cameraState = CameraState.MOVE_CAMERA;
+    private RenderState renderState = RenderState.COLOR;
 
     public MainFrame() {
         setTitle("3D Рендеринг");
@@ -80,14 +81,13 @@ public class MainFrame extends JFrame {
         camListScrollPane.setBounds(20, 500, 150, 300);
         add(camListScrollPane);
 
-        selectedCamera = new Camera(new Vector3f(50, 50, 50), new Vector3f(0, 0, 0), 1, 1, 0.1f, 100);
+        selectedCamera = new Camera(new Vector3f(100, 100, 100), new Vector3f(0, 0, 0), 1, 1, 0.1f, 1000);
 
         textureNameLabel = new JLabel("Название текстуры:");
         textureNameLabel.setBounds(120, 440, 300, 20);
 
         colorComboBox = new JComboBox<>(new String[]{"Красный", "Зеленый", "Синий"}); // Populate the ComboBox with color options
         colorComboBox.setBounds(120, 490, 130, 25);
-
 
         JButton loadTextureButton = new JButton("Загрузить текстуру");
         JButton saveButton = new JButton("Сохранить");
@@ -148,7 +148,6 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(rotationYField);
         propertiesPanel.add(rotationZField);
 
-
         JLabel scaleLabel = new JLabel("Масштаб:");
         scaleLabel.setBounds(150, 260, 100, 20);
         scaleXField = new JTextField();
@@ -162,7 +161,6 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(scaleYField);
         propertiesPanel.add(scaleZField);
 
-
         JLabel nameLabel = new JLabel("Название:");
         nameLabel.setBounds(150, 380, 100, 20);
         nameField = new JTextField();
@@ -170,148 +168,132 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(nameLabel);
         propertiesPanel.add(nameField);
 
-
-
         add(propertiesPanel);
 
+        saveButton.addActionListener(e -> {
+            if (selectedModel != null) {
+                selectedModel.setPosition(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
+                selectedModel.setRotation(new Vector3f(Float.parseFloat(rotationXField.getText()), Float.parseFloat(rotationYField.getText()), Float.parseFloat(rotationZField.getText())));
+                selectedModel.setScale(new Vector3f(Float.parseFloat(scaleXField.getText()), Float.parseFloat(scaleYField.getText()), Float.parseFloat(scaleZField.getText())));
+                selectedModel.setModelName(nameField.getText());
 
-        saveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (selectedModel != null) {
-                    selectedModel.setPosition(new Vector3f(Float.parseFloat(locationXField.getText()), Float.parseFloat(locationYField.getText()), Float.parseFloat(locationZField.getText())));
-                    selectedModel.setRotation(new Vector3f(Float.parseFloat(rotationXField.getText()), Float.parseFloat(rotationYField.getText()), Float.parseFloat(rotationZField.getText())));
-                    selectedModel.setScale(new Vector3f(Float.parseFloat(scaleXField.getText()), Float.parseFloat(scaleYField.getText()), Float.parseFloat(scaleZField.getText())));
-                    selectedModel.setModelName(nameField.getText());
+                render();
 
-                    // Additional logic to update the selected model in the 3D scene
-                    System.out.println("Изменения сохранены для модели: " + selectedModel.getModelName());
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения изменений");
-                }
+                // Additional logic to update the selected model in the 3D scene
+                System.out.println("Изменения сохранены для модели: " + selectedModel.getModelName());
+            } else {
+                JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения изменений");
             }
         });
 
-        createCameraButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String newCameraName = "Camera" + (camList.getSize() + 1); // Генерация нового имени камеры
-                camList.addElement(newCameraName); // Добавление новой камеры в список
-                jCamList.setModel(camList); // Обновление отображения списка камер
+        createCameraButton.addActionListener(e -> {
+            String newCameraName = "Camera" + (camList.getSize() + 1); // Генерация нового имени камеры
+            camList.addElement(newCameraName); // Добавление новой камеры в список
+            jCamList.setModel(camList); // Обновление отображения списка камер
+        });
+
+        deleteCameraButton.addActionListener(e -> {
+            int selectedIndex = jCamList.getSelectedIndex();
+            if (selectedIndex != -1 && camList.size() > 1) {
+                camList.remove(selectedIndex);
+                jCamList.setModel(camList); // Обновление jCamList
+            } else {
+                JOptionPane.showMessageDialog(frame, "Нельзя удалить последнюю камеру");
             }
         });
 
-        deleteCameraButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = jCamList.getSelectedIndex();
-                if (selectedIndex != -1 && camList.size() > 1) {
-                    camList.remove(selectedIndex);
-                    jCamList.setModel(camList); // Обновление jCamList
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Нельзя удалить последнюю камеру");
-                }
-            }
-        });
-
-
-        loadTextureButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectedModel != null) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Выберите текстурный файл");
-                    int userSelection = fileChooser.showOpenDialog(frame);
-                    if (userSelection == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        textureFileInfo = new FileInfo(selectedFile); // Store the file information
-                        textureNameLabel.setText("Название текстуры: " + textureFileInfo.getFileName()); // Update the texture name label
-                        selectedModel.setTexture(Path.of(selectedFile.getAbsolutePath()));
-                        System.out.println("Текстура загружена для модели: " + selectedModel.getModelName());
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Выберите модель для загрузки текстуры");
-                }
-                updateColorComboBoxStatus(); // Update the ComboBox status based on texture selection
-            }
-        });
-
-        colorComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (selectedModel != null && textureFileInfo != null) {
-                    selectedModel.setColor(getSelectedColorFromComboBox()); // Set the model color based on the ComboBox selection
-                    System.out.println("Установлен цвет для модели: " + selectedModel.getModelName());
-                }
-            }
-        });
-
-        loadButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        loadTextureButton.addActionListener(e -> {
+            if (selectedModel != null) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Выберите .obj файл");
-
+                fileChooser.setDialogTitle("Выберите текстурный файл");
                 int userSelection = fileChooser.showOpenDialog(frame);
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    String filePath = selectedFile.getAbsolutePath();
+                    textureFileInfo = new FileInfo(selectedFile); // Store the file information
+                    textureNameLabel.setText("Название текстуры: " + textureFileInfo.getFileName()); // Update the texture name label
+                    selectedModel.setTexture(Path.of(selectedFile.getAbsolutePath()));
 
-                    if (filePath.endsWith(".obj")) {
-                        // Создание экземпляра Model и добавление его в sceneModels
-                        Vector3f defaultPosition = new Vector3f(0, 0, 0);
-                        Vector3f defaultRotation = new Vector3f(0, 0, 0);
-                        Vector3f defaultScale = new Vector3f(1, 1, 1);
-                        try {
-                            ModelInScene newModel = new ModelInScene(
-                                    PrepareModel.prepareModel(ObjReader.read(Path.of(filePath))),
-                                    selectedFile.getName(), defaultPosition, defaultRotation, defaultScale
-                            );
+                    render();
 
-                            sceneModels.add(newModel);
+                    System.out.println("Текстура загружена для модели: " + selectedModel.getModelName());
+                }
+            } else {
+                JOptionPane.showMessageDialog(frame, "Выберите модель для загрузки текстуры");
+            }
+            updateColorComboBoxStatus(); // Update the ComboBox status based on texture selection
+        });
 
-                            // Обновление списка моделей в интерфейсе
-                            modelList.addElement(selectedFile.getName());
+        colorComboBox.addActionListener(e -> {
+            if (selectedModel != null && textureFileInfo != null) {
+                selectedModel.setColor(getSelectedColorFromComboBox()); // Set the model color based on the ComboBox selection
+                System.out.println("Установлен цвет для модели: " + selectedModel.getModelName());
+            }
+        });
 
-                            RenderEngine.render(viewport, selectedCamera, sceneModels);
-                        } catch (TooLowVerticesException | IOException ex) {
-                            JOptionPane.showMessageDialog(propertiesPanel, "Произошла ошибка, выберите другой .obj файл");
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Пожалуйста, выберите .obj файл");
+        loadButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Выберите .obj файл");
+
+            int userSelection = fileChooser.showOpenDialog(frame);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                String filePath = selectedFile.getAbsolutePath();
+
+                if (filePath.endsWith(".obj")) {
+                    // Создание экземпляра Model и добавление его в sceneModels
+                    Vector3f defaultPosition = new Vector3f(0, 0, 0);
+                    Vector3f defaultRotation = new Vector3f(0, 0, 0);
+                    Vector3f defaultScale = new Vector3f(1, 1, 1);
+                    try {
+                        ModelInScene newModel = new ModelInScene(
+                                PrepareModel.prepareModel(ObjReader.read(Path.of(filePath))),
+                                selectedFile.getName(), defaultPosition, defaultRotation, defaultScale
+                        );
+
+                        sceneModels.add(newModel);
+
+                        // Обновление списка моделей в интерфейсе
+                        modelList.addElement(selectedFile.getName());
+
+                        render();
+                    } catch (TooLowVerticesException | IOException ex) {
+                        JOptionPane.showMessageDialog(propertiesPanel, "Произошла ошибка, выберите другой .obj файл");
                     }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Пожалуйста, выберите .obj файл");
                 }
             }
         });
 
-        jModelList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                int selectedIndex = jModelList.getSelectedIndex();
-                if (selectedIndex != -1) {
-                   selectedModel = sceneModels.get(selectedIndex);
-                  updatePropertiesPanel(selectedModel);
-                }
+        jModelList.addListSelectionListener(e -> {
+            int selectedIndex = jModelList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                selectedModel = sceneModels.get(selectedIndex);
+                updatePropertiesPanel(selectedModel);
             }
         });
 
-        deleteButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = jModelList.getSelectedIndex();
-                if (selectedIndex != -1) { // Если модель выбрана
-                    String selectedModelName = modelList.getElementAt(selectedIndex);
-                    modelList.remove(selectedIndex);
+        deleteButton.addActionListener(e -> {
+            int selectedIndex = jModelList.getSelectedIndex();
+            if (selectedIndex != -1) { // Если модель выбрана
+                String selectedModelName = modelList.getElementAt(selectedIndex);
+                modelList.remove(selectedIndex);
 
-                    // Модель не является выбранной
-                    jModelList.clearSelection();
-                    selectedModel = null;
+                // Модель не является выбранной
+                jModelList.clearSelection();
+                selectedModel = null;
 
-                    // Удаляет модель из sceneModels
-                    sceneModels.remove(selectedIndex);
+                // Удаляет модель из sceneModels
+                sceneModels.remove(selectedIndex);
 
-                    // Очищает панель свойств
-                    clearPropertiesPanel();
+                // Очищает панель свойств
+                clearPropertiesPanel();
 
-                    System.out.println("Удалена модель: " + selectedModelName);
-                }
+                render();
+
+                System.out.println("Удалена модель: " + selectedModelName);
             }
         });
-
 
         camList.addElement("Camera1");
         jCamList.setModel(camList);
@@ -330,6 +312,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
+
     private void updatePropertiesPanel(ModelInScene model) {
         locationXField.setText(String.valueOf(model.getPosition().x));
         locationYField.setText(String.valueOf(model.getPosition().y));
@@ -377,30 +360,32 @@ public class MainFrame extends JFrame {
         };
     }
 
-
-    private void addModelToScene(ModelInScene model) {
-        sceneModels.add(model);
-        modelList.addElement(model.getModelName());
-    }
-
-    private void removeModelFromScene(int index) {
-        if (index >= 0 && index < sceneModels.size()) {
-            sceneModels.remove(index);
-            modelList.remove(index);
-            // Additional logic to remove the selected model from the 3D scene
-        }
-    }
-
     public Camera getSelectedCamera() {
         return selectedCamera;
     }
 
-    public Viewport.CameraState getCameraState() {
+    public CameraState getCameraState() {
         return cameraState;
     }
 
-    public Viewport.RenderState getRenderState() {
+    public RenderState getRenderState() {
         return renderState;
+    }
+
+    public void render() {
+        RenderEngine.render(viewport, selectedCamera, sceneModels);
+    }
+
+    public enum CameraState {
+        MOVE_CAMERA,
+        ROTATE_CAMERA
+    }
+
+    public enum RenderState {
+        CONTOUR,
+        COLOR,
+        TEXTURE,
+        LIGHT
     }
 
     public static void main(String[] args) {

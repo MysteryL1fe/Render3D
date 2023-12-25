@@ -174,16 +174,4 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
 
     }
-
-    public enum CameraState {
-        MOVE_CAMERA,
-        ROTATE_CAMERA
-    }
-
-    public enum RenderState {
-        CONTOUR,
-        COLOR,
-        TEXTURE,
-        LIGHT
-    }
 }

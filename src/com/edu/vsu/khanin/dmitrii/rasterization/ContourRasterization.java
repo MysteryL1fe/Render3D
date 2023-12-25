@@ -12,15 +12,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
 
 import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
 
-public class ColorRasterization implements RasterizationAlgorithm {
+public class ContourRasterization implements RasterizationAlgorithm {
     @Override
     public HashSet<ColorPixel> rasterization(ArrayList<ModelInScene> sceneModels, Matrix4f mVPMatrix, int width, int height) {
         HashSet<ColorPixel> colorPixels = new HashSet<>();
-        HashMap<Vector2f, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
             Model mesh = AffineTransformations.MakeInWorldCoord(model);
@@ -55,44 +53,15 @@ public class ColorRasterization implements RasterizationAlgorithm {
 
                         int newX = (int) (x * width + width / 2.0F);
                         int newY = (int) (-y * height + height / 2.0F);
-                        Vector2f pixel = new Vector2f(newX, newY);
-                        if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
-                            float eps = 0.01f;
-                            if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
-                                zBuffer.put(pixel, new ZBufferColor(z, Color.BLACK));
-                            else zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
-                        }
+
+                        float eps = 0.01f;
+                        if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
+                            colorPixels.add(new ColorPixel(newX, newY, Color.BLACK));
                     }
                 }
             }
         }
 
-        for (Vector2f pixel : zBuffer.keySet())
-            colorPixels.add(new ColorPixel((int) pixel.x, (int) pixel.y, zBuffer.get(pixel).color));
-
         return colorPixels;
-    }
-
-    private static class ZBufferColor {
-        public float zBuffer;
-        public Color color;
-
-        public ZBufferColor(float zBuffer, Color color) {
-            this.zBuffer = zBuffer;
-            this.color = color;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ZBufferColor that = (ZBufferColor) o;
-            return Float.compare(that.zBuffer, zBuffer) == 0 && color.equals(that.color);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(zBuffer, color);
-        }
     }
 }

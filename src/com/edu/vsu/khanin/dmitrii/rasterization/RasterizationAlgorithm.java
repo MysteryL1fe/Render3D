@@ -6,6 +6,7 @@ import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 
 public interface RasterizationAlgorithm {
     HashSet<ColorPixel> rasterization(final ArrayList<ModelInScene> sceneModels, Matrix4f mVPMatrix, int width, int height);
@@ -19,15 +20,18 @@ public interface RasterizationAlgorithm {
             this.y = y;
             this.color = color;
         }
-    }
 
-    class ZBufferColor {
-        public float zBuffer;
-        public Color color;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ColorPixel that = (ColorPixel) o;
+            return x == that.x && y == that.y && color.equals(that.color);
+        }
 
-        public ZBufferColor(float zBuffer, Color color) {
-            this.zBuffer = zBuffer;
-            this.color = color;
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y, color);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.edu.vsu.kretov.daniil.render_engine;
 
 import com.edu.vsu.khanin.dmitrii.rasterization.ColorRasterization;
+import com.edu.vsu.khanin.dmitrii.rasterization.ContourRasterization;
 import com.edu.vsu.khanin.dmitrii.rasterization.RasterizationAlgorithm;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
@@ -18,7 +19,7 @@ public class RenderEngine {
     }
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
-                              ColorRasterization rasterizationAlgorithm) {
+                              RasterizationAlgorithm rasterizationAlgorithm) {
         if (renderThread != null) renderThread.stopRender();
 
         viewport.clear();
@@ -67,7 +68,6 @@ public class RenderEngine {
 
         public void stopRender() {
             isRenderActive = false;
-            System.out.println("Stop render");
         }
     }
 }
