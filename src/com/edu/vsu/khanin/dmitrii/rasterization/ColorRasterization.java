@@ -3,6 +3,7 @@ package com.edu.vsu.khanin.dmitrii.rasterization;
 import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.render_engine.Camera;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
@@ -17,7 +18,8 @@ import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMa
 
 public class ColorRasterization implements RasterizationAlgorithm {
     @Override
-    public HashSet<ColorPixel> rasterization(ArrayList<ModelInScene> sceneModels, Matrix4f mVPMatrix, int width, int height) {
+    public HashSet<ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
+                                             Matrix4f mVPMatrix, int width, int height) {
         HashSet<ColorPixel> colorPixels = new HashSet<>();
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
