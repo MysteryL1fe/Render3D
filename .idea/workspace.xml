@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ca24881-d397-4a65-9b4b-2ce080cd7607" name="Changes" comment="added hotkeys for camera">
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/ColorRasterization.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/RasterizationAlgorithm.java" afterDir="false" />
+    <list default="true" id="e220392e-c47d-4bb2-9f00-f6eb3537c4d6" name="Changes" comment="Some changes in camera move v 1.6.1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/Rasterization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/BarycentricCoordinates.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/RenderEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/ColorRasterization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/ColorRasterization.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/ContourRasterization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/khanin/dmitrii/rasterization/ContourRasterization.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AphineTransforms/AffineTransformations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AffineTransforms/AffineTransformations.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/render_engine/Viewport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/edu/vsu/prilepin/maxim/MainFrame.form" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,5 +178,16 @@
     <MESSAGE value="Completed mimimal render" />
     <MESSAGE value="added hotkeys for camera" />
     <option name="LAST_COMMIT_MESSAGE" value="added hotkeys for camera" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/edu/vsu/kretov/daniil/mathLib4Task/AffineTransforms/AffineTransformations.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

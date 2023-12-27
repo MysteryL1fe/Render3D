@@ -1,8 +1,7 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
-import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
+import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
-import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
@@ -10,7 +9,6 @@ import com.edu.vsu.prilepin.maxim.model.Polygon;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
@@ -21,7 +19,7 @@ public class ContourRasterization implements RasterizationAlgorithm {
         HashSet<ColorPixel> colorPixels = new HashSet<>();
 
         for (ModelInScene model : sceneModels) {
-            Model mesh = AffineTransformations.MakeInWorldCoord(model);
+            Model mesh = AffineTransformations.makeInWorldCoord(model);
             for (Polygon polygon : mesh.polygons) {
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
