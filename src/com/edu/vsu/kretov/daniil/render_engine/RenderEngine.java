@@ -1,9 +1,6 @@
 package com.edu.vsu.kretov.daniil.render_engine;
 
-import com.edu.vsu.khanin.dmitrii.rasterization.ColorRasterization;
-import com.edu.vsu.khanin.dmitrii.rasterization.ContourRasterization;
-import com.edu.vsu.khanin.dmitrii.rasterization.RasterizationAlgorithm;
-import com.edu.vsu.khanin.dmitrii.rasterization.TextureRasterization;
+import com.edu.vsu.khanin.dmitrii.rasterization.*;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 
@@ -16,7 +13,7 @@ public class RenderEngine {
     private static RenderThread renderThread;
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels) {
-        render(viewport, camera, sceneModels, new TextureRasterization());
+        render(viewport, camera, sceneModels, new LightRasterization());
     }
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
@@ -58,7 +55,8 @@ public class RenderEngine {
             modelViewProjectionMatrix.mul(projectionMatrix);
 
             HashSet<RasterizationAlgorithm.ColorPixel> pixels = rasterizationAlgorithm.rasterization(
-                    sceneModels, modelViewProjectionMatrix, viewport.getBounds().width, viewport.getBounds().height
+                    camera, sceneModels, modelViewProjectionMatrix,
+                    viewport.getBounds().width, viewport.getBounds().height
             );
 
             for (RasterizationAlgorithm.ColorPixel pixel : pixels) {

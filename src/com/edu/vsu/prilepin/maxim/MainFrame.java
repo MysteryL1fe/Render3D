@@ -121,6 +121,8 @@ public class MainFrame extends JFrame {
         propertiesPanel.setLayout(null);
         propertiesPanel.add(loadTextureButton);
         propertiesPanel.add(saveButton);
+        propertiesPanel.add(textureNameLabel);
+        propertiesPanel.add(colorComboBox);
 
         JLabel locationLabel = new JLabel("Позиция:");
         locationLabel.setBounds(150, 20, 100, 20);

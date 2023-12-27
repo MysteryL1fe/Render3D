@@ -12,7 +12,6 @@ import com.edu.vsu.prilepin.maxim.model.Polygon;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.Objects;
 
 import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
 
-public class TextureRasterization implements RasterizationAlgorithm {
+public class LightRasterization implements RasterizationAlgorithm {
     @Override
     public HashSet<ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
                                              Matrix4f mVPMatrix, int width, int height) {
@@ -68,6 +67,15 @@ public class TextureRasterization implements RasterizationAlgorithm {
                     }
                 }
 
+                Vector3f normal1 = null;
+                Vector3f normal2 = null;
+                Vector3f normal3 = null;
+                if (polygon.getNormalIndices().size() >= 3) {
+                    normal1 = mesh.normals.get(polygon.getTextureVertexIndices().get(0));
+                    normal2 = mesh.normals.get(polygon.getTextureVertexIndices().get(1));
+                    normal3 = mesh.normals.get(polygon.getTextureVertexIndices().get(2));
+                }
+
                 for (float x = minX; x <= maxX; x += (float) 1 / width) {
                     for (float y = minY; y <= maxY; y += (float) 1 / height) {
                         Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(x, y, v1, v2, v3);
@@ -101,10 +109,72 @@ public class TextureRasterization implements RasterizationAlgorithm {
                                 int red = (color >> 16) & 0xff;
                                 int green = (color >> 8) & 0xff;
                                 int blue = (color) & 0xff;
+
+                                if (normal1 != null && normal2 != null && normal3 != null) {
+                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
+                                    Vector3f n = new Vector3f(
+                                            normal1.x * barycentricCoords.x
+                                                    + normal2.x * barycentricCoords.y
+                                                    + normal3.x * barycentricCoords.z,
+                                            normal1.y * barycentricCoords.x
+                                                    + normal2.y * barycentricCoords.y
+                                                    + normal3.y * barycentricCoords.z,
+                                            normal1.z * barycentricCoords.x
+                                                    + normal2.z * barycentricCoords.y
+                                                    + normal3.z * barycentricCoords.z
+                                    ).nor();
+
+                                    Vector3f lVec = n.cpy().scl(ray);
+                                    float l = lVec.x + lVec.y + lVec.z;
+                                    float k = 0.2f;
+
+                                    if (l < 0) {
+                                        red = 0;
+                                        green = 0;
+                                        blue = 0;
+                                    } else {
+                                        red = (int) (red * (1 - k) + (red * k * l));
+                                        green = (int) (green * (1 - k) + (green * k * l));
+                                        blue = (int) (blue * (1 - k) + (blue * k * l));
+                                    }
+                                }
+
                                 zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
                             } else {
                                 // set pixel from model's color
-                                zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
+                                int red = model.getColor().getRed();
+                                int green = model.getColor().getGreen();
+                                int blue = model.getColor().getBlue();
+
+                                if (normal1 != null && normal2 != null && normal3 != null) {
+                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
+                                    Vector3f n = new Vector3f(
+                                            normal1.x * barycentricCoords.x
+                                                    + normal2.x * barycentricCoords.y
+                                                    + normal3.x * barycentricCoords.z,
+                                            normal1.y * barycentricCoords.x
+                                                    + normal2.y * barycentricCoords.y
+                                                    + normal3.y * barycentricCoords.z,
+                                            normal1.z * barycentricCoords.x
+                                                    + normal2.z * barycentricCoords.y
+                                                    + normal3.z * barycentricCoords.z
+                                    ).nor();
+
+                                    Vector3f lVec = n.cpy().scl(ray);
+                                    float l = lVec.x + lVec.y + lVec.z;
+                                    float k = 0.1f;
+
+                                    if (l < 0) {
+                                        red = 0;
+                                        green = 0;
+                                        blue = 0;
+                                    } else {
+                                        red = (int) (red * (1 - k) + (red * k * l));
+                                        green = (int) (green * (1 - k) + (green * k * l));
+                                        blue = (int) (blue * (1 - k) + (blue * k * l));
+                                    }
+                                }
+                                zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
                             }
                         }
                     }

@@ -1,6 +1,7 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
+import com.edu.vsu.kretov.daniil.render_engine.Camera;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 
 import java.awt.*;
@@ -9,7 +10,8 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public interface RasterizationAlgorithm {
-    HashSet<ColorPixel> rasterization(final ArrayList<ModelInScene> sceneModels, Matrix4f mVPMatrix, int width, int height);
+    HashSet<ColorPixel> rasterization(final Camera camera, final ArrayList<ModelInScene> sceneModels,
+                                      Matrix4f mVPMatrix, int width, int height);
 
     class Pixel {
         public int x, y;
