@@ -64,8 +64,8 @@ public class ModelInScene {
         this.model = model;
     }
 
-    public void setColor(Color selectedColorFromComboBox) {
-        this.color = color;
+    public void setColor(Color color) {
+        // Set color for the model
     }
 
     public Color getColor() {

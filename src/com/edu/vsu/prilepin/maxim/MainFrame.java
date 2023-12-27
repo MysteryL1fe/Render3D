@@ -6,8 +6,10 @@ import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.kretov.daniil.render_engine.Camera;
 import com.edu.vsu.kretov.daniil.render_engine.RenderEngine;
 import com.edu.vsu.kretov.daniil.render_engine.Viewport;
+import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.obj.ObjReader;
+import com.edu.vsu.prilepin.maxim.obj.ObjWriter;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -21,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.awt.Color;
+
+import static com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations.MakeInWorldCoord;
 
 class FileInfo {
     private final File file;
@@ -54,8 +58,10 @@ public class MainFrame extends JFrame {
     private final JTextField scaleYField;
     private final JTextField scaleZField;
     private final JTextField nameField;
+    private final JTextField redField;
+    private final JTextField greenField;
+    private final JTextField blueField;
     private final JLabel textureNameLabel; // Add a JLabel to display the texture name
-    private final JComboBox<String> colorComboBox; // Add a ComboBox for selecting the model color
     private FileInfo textureFileInfo; // Create a new class to hold file information
     private CameraState cameraState = CameraState.MOVE_CAMERA;
     private RenderState renderState = RenderState.COLOR;
@@ -72,13 +78,13 @@ public class MainFrame extends JFrame {
         jModelList = new JList<>(modelList);
         jModelList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane modelListScrollPane = new JScrollPane(jModelList);
-        modelListScrollPane.setBounds(20, 100, 150, 300);
+        modelListScrollPane.setBounds(20, 140, 150, 300);
         add(modelListScrollPane);
 
         jCamList = new JList<>();
         jCamList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane camListScrollPane = new JScrollPane(jCamList);
-        camListScrollPane.setBounds(20, 500, 150, 300);
+        camListScrollPane.setBounds(20, 540, 150, 300);
         add(camListScrollPane);
 
         selectedCamera = new Camera(new Vector3f(100, 100, 100), new Vector3f(0, 0, 0), 1, 1, 0.1f, 1000);
@@ -86,8 +92,6 @@ public class MainFrame extends JFrame {
         textureNameLabel = new JLabel("Название текстуры:");
         textureNameLabel.setBounds(120, 440, 300, 20);
 
-        colorComboBox = new JComboBox<>(new String[]{"Красный", "Зеленый", "Синий"}); // Populate the ComboBox with color options
-        colorComboBox.setBounds(120, 490, 130, 25);
 
         JButton loadTextureButton = new JButton("Загрузить текстуру");
         JButton saveButton = new JButton("Сохранить");
@@ -96,22 +100,74 @@ public class MainFrame extends JFrame {
         JFrame frame = new JFrame("Model Loader");
         JButton createCameraButton = new JButton("Добавить камеру");
         JButton deleteCameraButton = new JButton("Удалить камеру");
+        JButton saveModelButton = new JButton("Сохранить модель");
+        JButton createColorButton = new JButton("Закрасить");
+        redField = new JTextField();
+        greenField = new JTextField();
+        blueField = new JTextField();
 
-        loadTextureButton.setBounds(100, 540, 180, 30);
-        saveButton.setBounds(100, 580, 180, 30);
+        JLabel cameraLabel = new JLabel("Камера:");
+        cameraLabel.setBounds(200, 0, 50, 20);
+        add(cameraLabel);
+        ButtonGroup cameraButtonGroup = new ButtonGroup();
+
+        JRadioButton moveRadioButton = new JRadioButton("Двигать");
+        JRadioButton rotateRadioButton = new JRadioButton("Вращать");
+
+        moveRadioButton.setBounds(250, 0, 100, 20);
+        rotateRadioButton.setBounds(350, 0, 100, 20);
+
+        cameraButtonGroup.add(moveRadioButton);
+        cameraButtonGroup.add(rotateRadioButton);
+        moveRadioButton.setSelected(true);
+
+        add(moveRadioButton);
+        add(rotateRadioButton);
+
+        JLabel renderLabel = new JLabel("Рендер:");
+        renderLabel.setBounds(480, 0, 50, 20);
+        add(renderLabel);
+        ButtonGroup renderButtonGroup = new ButtonGroup();
+
+        JRadioButton contourRadioButton = new JRadioButton("Контур");
+        JRadioButton colorRadioButton = new JRadioButton("Цвет");
+        JRadioButton textureRadioButton = new JRadioButton("Текстура");
+        JRadioButton lightRadioButton = new JRadioButton("Свет");
+
+        contourRadioButton.setBounds(540, 0, 100, 20);
+        colorRadioButton.setBounds(640, 0, 100, 20);
+        textureRadioButton.setBounds(740, 0, 100, 20);
+        lightRadioButton.setBounds(840, 0, 100, 20);
+
+        renderButtonGroup.add(contourRadioButton);
+        renderButtonGroup.add(colorRadioButton);
+        renderButtonGroup.add(textureRadioButton);
+        renderButtonGroup.add(lightRadioButton);
+        contourRadioButton.setSelected(true);
+
+        add(contourRadioButton);
+        add(colorRadioButton);
+        add(textureRadioButton);
+        add(lightRadioButton);
+
+        loadTextureButton.setBounds(100, 680, 180, 30);
+        saveButton.setBounds(100, 720, 180, 30);
         loadButton.setBounds(20, 20, 150, 30);
         deleteButton.setBounds(20, 60, 150, 30);
-        createCameraButton.setBounds(20, 420, 150, 30);
-        deleteCameraButton.setBounds(20, 460, 150, 30);
+        createCameraButton.setBounds(20, 460, 150, 30);
+        deleteCameraButton.setBounds(20, 500, 150, 30);
+        saveModelButton.setBounds(20, 100, 150, 30);
+        createColorButton.setBounds(100, 640, 180, 30);
 
         add(saveButton);
         add(loadButton);
         add(deleteButton);
         add(createCameraButton);
         add(deleteCameraButton);
+        add(saveModelButton);
 
         viewport = new Viewport(this);
-        viewport.setBounds(200, 20, 400, 400);
+        viewport.setBounds(200, 20, 600, 400);
         viewport.setBorder(BorderFactory.createEtchedBorder());
         add(viewport);
 
@@ -122,10 +178,19 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(loadTextureButton);
         propertiesPanel.add(saveButton);
         propertiesPanel.add(textureNameLabel);
-        propertiesPanel.add(colorComboBox);
+        propertiesPanel.add(redField);
+        propertiesPanel.add(greenField);
+        propertiesPanel.add(blueField);
+        propertiesPanel.add(createColorButton);
 
         JLabel locationLabel = new JLabel("Позиция:");
+        JLabel locationLabelX = new JLabel("X");
+        JLabel locationLabelY = new JLabel("Y");
+        JLabel locationLabelZ = new JLabel("Z");
         locationLabel.setBounds(150, 20, 100, 20);
+        locationLabelX.setBounds(100, 50, 100, 20);
+        locationLabelY.setBounds(100, 80, 100, 20);
+        locationLabelZ.setBounds(100, 110, 100, 20);
         locationXField = new JTextField();
         locationYField = new JTextField();
         locationZField = new JTextField();
@@ -136,9 +201,18 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(locationXField);
         propertiesPanel.add(locationYField);
         propertiesPanel.add(locationZField);
+        propertiesPanel.add(locationLabelX);
+        propertiesPanel.add(locationLabelY);
+        propertiesPanel.add(locationLabelZ);
 
         JLabel rotationLabel = new JLabel("Поворот:");
+        JLabel rotationLabelX = new JLabel("X");
+        JLabel rotationLabelY = new JLabel("Y");
+        JLabel rotationLabelZ = new JLabel("Z");
         rotationLabel.setBounds(150, 140, 100, 20);
+        rotationLabelX.setBounds(100, 170, 100, 20);
+        rotationLabelY.setBounds(100, 200, 100, 20);
+        rotationLabelZ.setBounds(100, 230, 100, 20);
         rotationXField = new JTextField();
         rotationYField = new JTextField();
         rotationZField = new JTextField();
@@ -149,19 +223,48 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(rotationXField);
         propertiesPanel.add(rotationYField);
         propertiesPanel.add(rotationZField);
+        propertiesPanel.add(rotationLabelX);
+        propertiesPanel.add(rotationLabelY);
+        propertiesPanel.add(rotationLabelZ);
 
         JLabel scaleLabel = new JLabel("Масштаб:");
+        JLabel scaleLabelX = new JLabel("X");
+        JLabel scaleLabelY = new JLabel("Y");
+        JLabel scaleLabelZ = new JLabel("Z");
         scaleLabel.setBounds(150, 260, 100, 20);
+        scaleLabelX.setBounds(100, 290, 100, 20);
+        scaleLabelY.setBounds(100, 320, 100, 20);
+        scaleLabelZ.setBounds(100, 350, 100, 20);
         scaleXField = new JTextField();
         scaleYField = new JTextField();
         scaleZField = new JTextField();
         scaleXField.setBounds(120, 290, 130, 25);
         scaleYField.setBounds(120, 320, 130, 25);
         scaleZField.setBounds(120, 350, 130, 25);
+
+        JLabel colorLabel = new JLabel("Цвет:");
+        JLabel colorLabelR = new JLabel("R");
+        JLabel colorLabelG = new JLabel("G");
+        JLabel colorLabelB = new JLabel("B");
+        colorLabel.setBounds(150, 500, 100, 20);
+        colorLabelR.setBounds(100, 530, 130, 20);
+        colorLabelG.setBounds(100, 560, 130, 20);
+        colorLabelB.setBounds(100, 590, 130, 20);
+        redField.setBounds(120, 530, 130, 25);
+        greenField.setBounds(120, 560, 130, 25);
+        blueField.setBounds(120, 590, 130, 25);
+
         propertiesPanel.add(scaleLabel);
         propertiesPanel.add(scaleXField);
         propertiesPanel.add(scaleYField);
         propertiesPanel.add(scaleZField);
+        propertiesPanel.add(scaleLabelX);
+        propertiesPanel.add(scaleLabelY);
+        propertiesPanel.add(scaleLabelZ);
+        propertiesPanel.add(colorLabel);
+        propertiesPanel.add(colorLabelR);
+        propertiesPanel.add(colorLabelG);
+        propertiesPanel.add(colorLabelB);
 
         JLabel nameLabel = new JLabel("Название:");
         nameLabel.setBounds(150, 380, 100, 20);
@@ -204,6 +307,22 @@ public class MainFrame extends JFrame {
             }
         });
 
+        createColorButton.addActionListener(e -> {
+            if (selectedModel != null) {
+                int red = Integer.parseInt(redField.getText());
+                int green = Integer.parseInt(greenField.getText());
+                int blue = Integer.parseInt(blueField.getText());
+
+                selectedModel.setColor(new Color(red, green, blue));
+
+                render();
+
+                System.out.println("Model filled with color: " + selectedModel.getModelName());
+            } else {
+                JOptionPane.showMessageDialog(frame, "Выберите модель для закраски");
+            }
+        });
+
         loadTextureButton.addActionListener(e -> {
             if (selectedModel != null) {
                 JFileChooser fileChooser = new JFileChooser();
@@ -222,17 +341,34 @@ public class MainFrame extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(frame, "Выберите модель для загрузки текстуры");
             }
-            updateColorComboBoxStatus(); // Update the ComboBox status based on texture selection
         });
 
-        colorComboBox.addActionListener(e -> {
-            if (selectedModel != null && textureFileInfo != null) {
-                selectedModel.setColor(getSelectedColorFromComboBox()); // Set the model color based on the ComboBox selection
-                System.out.println("Установлен цвет для модели: " + selectedModel.getModelName());
+
+
+        saveModelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (selectedModel != null) {
+                    // Открыть окошко для выбора места сохранения модели
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Выберите место для сохранения модели");
+                    int userSelection = fileChooser.showSaveDialog(frame);
+                    if (userSelection == JFileChooser.APPROVE_OPTION) {
+                        File fileToSave = fileChooser.getSelectedFile();
+                        String filePath = fileToSave.getAbsolutePath();
+
+                        // Вызвать функцию MakeInWorldCoord для модели и сохранить модель в формате OBJ
+                        Model transformedModel = MakeInWorldCoord(selectedModel);
+                        ObjWriter.writeModelToObjFile(filePath, transformedModel);
+
+                        System.out.println("Модель успешно сохранена в файл: " + filePath);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения в файл");
+                }
             }
         });
 
-        loadButton.addActionListener(e -> {
+                    loadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Выберите .obj файл");
 
@@ -348,19 +484,7 @@ public class MainFrame extends JFrame {
         nameField.setText("");
     }
 
-    private void updateColorComboBoxStatus() {
-        // Disable the ComboBox if no texture is selected
-        colorComboBox.setEnabled(textureFileInfo == null); // Enable the ComboBox if a texture is selected
-    }
 
-    private Color getSelectedColorFromComboBox() {
-        return switch (colorComboBox.getSelectedIndex()) {
-            case 0 -> Color.RED;
-            case 1 -> Color.GREEN;
-            case 2 -> Color.BLUE;
-            default -> Color.BLACK;
-        };
-    }
 
     public Camera getSelectedCamera() {
         return selectedCamera;
