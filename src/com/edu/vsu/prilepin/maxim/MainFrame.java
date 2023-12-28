@@ -12,10 +12,6 @@ import com.edu.vsu.prilepin.maxim.obj.ObjReader;
 import com.edu.vsu.prilepin.maxim.obj.ObjWriter;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -24,7 +20,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.awt.Color;
 
-import static com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations.MakeInWorldCoord;
+import static com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations.*;
 
 class FileInfo {
     private final File file;
@@ -64,7 +60,7 @@ public class MainFrame extends JFrame {
     private final JLabel textureNameLabel; // Add a JLabel to display the texture name
     private FileInfo textureFileInfo; // Create a new class to hold file information
     private CameraState cameraState = CameraState.MOVE_CAMERA;
-    private RenderState renderState = RenderState.COLOR;
+    private RenderEngine.RenderState renderState = RenderEngine.RenderState.CONTOUR;
 
     public MainFrame() {
         setTitle("3D Рендеринг");
@@ -87,11 +83,8 @@ public class MainFrame extends JFrame {
         camListScrollPane.setBounds(20, 540, 150, 300);
         add(camListScrollPane);
 
-        selectedCamera = new Camera(new Vector3f(100, 100, 100), new Vector3f(0, 0, 0), 1, 1, 0.1f, 1000);
-
         textureNameLabel = new JLabel("Название текстуры:");
         textureNameLabel.setBounds(120, 440, 300, 20);
-
 
         JButton loadTextureButton = new JButton("Загрузить текстуру");
         JButton saveButton = new JButton("Сохранить");
@@ -114,6 +107,9 @@ public class MainFrame extends JFrame {
         JRadioButton moveRadioButton = new JRadioButton("Двигать");
         JRadioButton rotateRadioButton = new JRadioButton("Вращать");
 
+        moveRadioButton.addActionListener(e -> cameraState = CameraState.MOVE_CAMERA);
+        rotateRadioButton.addActionListener(e -> cameraState = CameraState.ROTATE_CAMERA);
+
         moveRadioButton.setBounds(250, 0, 100, 20);
         rotateRadioButton.setBounds(350, 0, 100, 20);
 
@@ -133,6 +129,23 @@ public class MainFrame extends JFrame {
         JRadioButton colorRadioButton = new JRadioButton("Цвет");
         JRadioButton textureRadioButton = new JRadioButton("Текстура");
         JRadioButton lightRadioButton = new JRadioButton("Свет");
+
+        contourRadioButton.addActionListener(e -> {
+            renderState = RenderEngine.RenderState.CONTOUR;
+            render();
+        });
+        colorRadioButton.addActionListener(e -> {
+            renderState = RenderEngine.RenderState.COLOR;
+            render();
+        });
+        textureRadioButton.addActionListener(e -> {
+            renderState = RenderEngine.RenderState.TEXTURE;
+            render();
+        });
+        lightRadioButton.addActionListener(e -> {
+            renderState = RenderEngine.RenderState.LIGHT;
+            render();
+        });
 
         contourRadioButton.setBounds(540, 0, 100, 20);
         colorRadioButton.setBounds(640, 0, 100, 20);
@@ -167,9 +180,14 @@ public class MainFrame extends JFrame {
         add(saveModelButton);
 
         viewport = new Viewport(this);
-        viewport.setBounds(200, 20, 600, 400);
+        viewport.setBounds(200, 20, 900, 700);
         viewport.setBorder(BorderFactory.createEtchedBorder());
         add(viewport);
+
+        selectedCamera = new Camera(
+                new Vector3f(100, 100, 100), new Vector3f(0, 0, 0),
+                1, 1, 0.1f, 1000
+        );
 
         propertiesPanel = new JPanel();
         propertiesPanel.setBounds(620, 20, 150, 400);
@@ -344,31 +362,28 @@ public class MainFrame extends JFrame {
         });
 
 
+        saveModelButton.addActionListener(e -> {
+            if (selectedModel != null) {
+                // Открыть окошко для выбора места сохранения модели
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Выберите место для сохранения модели");
+                int userSelection = fileChooser.showSaveDialog(frame);
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    String filePath = fileToSave.getAbsolutePath();
 
-        saveModelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (selectedModel != null) {
-                    // Открыть окошко для выбора места сохранения модели
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Выберите место для сохранения модели");
-                    int userSelection = fileChooser.showSaveDialog(frame);
-                    if (userSelection == JFileChooser.APPROVE_OPTION) {
-                        File fileToSave = fileChooser.getSelectedFile();
-                        String filePath = fileToSave.getAbsolutePath();
+                    // Вызвать функцию MakeInWorldCoord для модели и сохранить модель в формате OBJ
+                    Model transformedModel = makeInWorldCoord(selectedModel);
+                    ObjWriter.writeModelToObjFile(filePath, transformedModel);
 
-                        // Вызвать функцию MakeInWorldCoord для модели и сохранить модель в формате OBJ
-                        Model transformedModel = MakeInWorldCoord(selectedModel);
-                        ObjWriter.writeModelToObjFile(filePath, transformedModel);
-
-                        System.out.println("Модель успешно сохранена в файл: " + filePath);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения в файл");
+                    System.out.println("Модель успешно сохранена в файл: " + filePath);
                 }
+            } else {
+                JOptionPane.showMessageDialog(frame, "Выберите модель для сохранения в файл");
             }
         });
 
-                    loadButton.addActionListener(e -> {
+        loadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Выберите .obj файл");
 
@@ -440,7 +455,7 @@ public class MainFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
                 int height = getHeight();
-                viewport.setSize((int) (width * 0.5), height - 40);
+                //viewport.setSize((int) (width * 0.5), height - 40);
                 propertiesPanel.setLocation((int) (width * 0.75), 20);
                 propertiesPanel.setSize((int) (width * 0.25) - 20, height - 40);
             }
@@ -484,8 +499,6 @@ public class MainFrame extends JFrame {
         nameField.setText("");
     }
 
-
-
     public Camera getSelectedCamera() {
         return selectedCamera;
     }
@@ -494,12 +507,12 @@ public class MainFrame extends JFrame {
         return cameraState;
     }
 
-    public RenderState getRenderState() {
+    public RenderEngine.RenderState getRenderState() {
         return renderState;
     }
 
     public void render() {
-        RenderEngine.render(viewport, selectedCamera, sceneModels);
+        RenderEngine.render(viewport, selectedCamera, sceneModels, renderState);
     }
 
     public enum CameraState {
@@ -507,19 +520,8 @@ public class MainFrame extends JFrame {
         ROTATE_CAMERA
     }
 
-    public enum RenderState {
-        CONTOUR,
-        COLOR,
-        TEXTURE,
-        LIGHT
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame();
-            }
-        });
+        SwingUtilities.invokeLater(MainFrame::new);
     }
 }
 

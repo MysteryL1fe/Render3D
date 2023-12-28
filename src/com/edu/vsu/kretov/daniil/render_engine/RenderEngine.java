@@ -12,8 +12,14 @@ import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.*;
 public class RenderEngine {
     private static RenderThread renderThread;
 
-    public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels) {
-        render(viewport, camera, sceneModels, new LightRasterization());
+    public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
+                              RenderState renderState) {
+        render(viewport, camera, sceneModels, switch (renderState) {
+            case CONTOUR -> new ContourRasterization();
+            case COLOR -> new ColorRasterization();
+            case TEXTURE -> new TextureRasterization();
+            case LIGHT -> new LightRasterization();
+        });
     }
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
@@ -56,7 +62,7 @@ public class RenderEngine {
 
             HashSet<RasterizationAlgorithm.ColorPixel> pixels = rasterizationAlgorithm.rasterization(
                     camera, sceneModels, modelViewProjectionMatrix,
-                    viewport.getBounds().width, viewport.getBounds().height
+                    viewport.getWidth(), viewport.getHeight()
             );
 
             for (RasterizationAlgorithm.ColorPixel pixel : pixels) {
@@ -68,5 +74,12 @@ public class RenderEngine {
         public void stopRender() {
             isRenderActive = false;
         }
+    }
+
+    public enum RenderState {
+        CONTOUR,
+        COLOR,
+        TEXTURE,
+        LIGHT
     }
 }
