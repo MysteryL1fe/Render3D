@@ -1,6 +1,7 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
-import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
+import com.edu.vsu.khanin.dmitrii.preparation.PolygonWithNormal;
+import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
@@ -28,8 +29,9 @@ public class LightRasterization implements RasterizationAlgorithm {
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
-            Model mesh = AffineTransformations.MakeInWorldCoord(model);
+            Model mesh = AffineTransformations.makeInWorldCoord(model);
             for (Polygon polygon : mesh.polygons) {
+                float k = 0.75f;
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
                 Vector3f v3 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(2)).cpy());
@@ -76,9 +78,15 @@ public class LightRasterization implements RasterizationAlgorithm {
                     normal3 = mesh.normals.get(polygon.getTextureVertexIndices().get(2));
                 }
 
-                for (float x = minX; x <= maxX; x += (float) 1 / width) {
-                    for (float y = minY; y <= maxY; y += (float) 1 / height) {
-                        Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(x, y, v1, v2, v3);
+                for (int x = (int) Math.floor(minX * width / 2 + width / 2.0f);
+                     x <= Math.ceil(maxX * width / 2 + width / 2.0f); x++) {
+                    for (int y = (int) Math.floor(-maxY * height / 2 + height / 2.0f);
+                         y <= Math.ceil(-minY * height / 2 + height / 2.0f); y++) {
+                        Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(
+                                2.0f * x / width - 1,
+                                -2.0f * y / height + 1,
+                                v1, v2, v3
+                        );
 
                         if (barycentricCoords.x < 0 || barycentricCoords.y < 0 || barycentricCoords.z < 0) continue;
 
@@ -86,9 +94,7 @@ public class LightRasterization implements RasterizationAlgorithm {
 
                         if (Math.abs(z) > 1) continue;
 
-                        int newX = (int) (x * width + width / 2.0F);
-                        int newY = (int) (-y * height + height / 2.0F);
-                        Pixel pixel = new Pixel(newX, newY);
+                        Pixel pixel = new Pixel(x, y);
                         if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
                             if (img != null) {
                                 // set pixel color from texture
@@ -126,7 +132,22 @@ public class LightRasterization implements RasterizationAlgorithm {
 
                                     Vector3f lVec = n.cpy().scl(ray);
                                     float l = lVec.x + lVec.y + lVec.z;
-                                    float k = 0.2f;
+
+                                    if (l < 0) {
+                                        red = 0;
+                                        green = 0;
+                                        blue = 0;
+                                    } else {
+                                        red = (int) (red * (1 - k) + (red * k * l));
+                                        green = (int) (green * (1 - k) + (green * k * l));
+                                        blue = (int) (blue * (1 - k) + (blue * k * l));
+                                    }
+                                } else if (polygon instanceof PolygonWithNormal) {
+                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
+                                    Vector3f n = ((PolygonWithNormal) polygon).getNormal().cpy();
+
+                                    Vector3f lVec = n.cpy().scl(ray);
+                                    float l = lVec.x + lVec.y + lVec.z;
 
                                     if (l < 0) {
                                         red = 0;
@@ -162,7 +183,22 @@ public class LightRasterization implements RasterizationAlgorithm {
 
                                     Vector3f lVec = n.cpy().scl(ray);
                                     float l = lVec.x + lVec.y + lVec.z;
-                                    float k = 0.1f;
+
+                                    if (l < 0) {
+                                        red = 0;
+                                        green = 0;
+                                        blue = 0;
+                                    } else {
+                                        red = (int) (red * (1 - k) + (red * k * l));
+                                        green = (int) (green * (1 - k) + (green * k * l));
+                                        blue = (int) (blue * (1 - k) + (blue * k * l));
+                                    }
+                                } else if (polygon instanceof PolygonWithNormal) {
+                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
+                                    Vector3f n = ((PolygonWithNormal) polygon).getNormal().cpy();
+
+                                    Vector3f lVec = n.cpy().scl(ray);
+                                    float l = lVec.x + lVec.y + lVec.z;
 
                                     if (l < 0) {
                                         red = 0;
@@ -174,6 +210,7 @@ public class LightRasterization implements RasterizationAlgorithm {
                                         blue = (int) (blue * (1 - k) + (blue * k * l));
                                     }
                                 }
+
                                 zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
                             }
                         }

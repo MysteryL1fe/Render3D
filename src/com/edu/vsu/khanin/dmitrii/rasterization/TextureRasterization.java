@@ -1,6 +1,6 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
-import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
+import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
@@ -29,7 +29,7 @@ public class TextureRasterization implements RasterizationAlgorithm {
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
-            Model mesh = AffineTransformations.MakeInWorldCoord(model);
+            Model mesh = AffineTransformations.makeInWorldCoord(model);
             for (Polygon polygon : mesh.polygons) {
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
@@ -68,9 +68,15 @@ public class TextureRasterization implements RasterizationAlgorithm {
                     }
                 }
 
-                for (float x = minX; x <= maxX; x += (float) 1 / width) {
-                    for (float y = minY; y <= maxY; y += (float) 1 / height) {
-                        Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(x, y, v1, v2, v3);
+                for (int x = (int) Math.floor(minX * width / 2 + width / 2.0f);
+                     x <= Math.ceil(maxX * width / 2 + width / 2.0f); x++) {
+                    for (int y = (int) Math.floor(-maxY * height / 2 + height / 2.0f);
+                         y <= Math.ceil(-minY * height / 2 + height / 2.0f); y++) {
+                        Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(
+                                2.0f * x / width - 1,
+                                -2.0f * y / height + 1,
+                                v1, v2, v3
+                        );
 
                         if (barycentricCoords.x < 0 || barycentricCoords.y < 0 || barycentricCoords.z < 0) continue;
 
@@ -78,9 +84,7 @@ public class TextureRasterization implements RasterizationAlgorithm {
 
                         if (Math.abs(z) > 1) continue;
 
-                        int newX = (int) (x * width + width / 2.0F);
-                        int newY = (int) (-y * height + height / 2.0F);
-                        Pixel pixel = new Pixel(newX, newY);
+                        Pixel pixel = new Pixel(x, y);
                         if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
                             if (img != null) {
                                 // set pixel color from texture

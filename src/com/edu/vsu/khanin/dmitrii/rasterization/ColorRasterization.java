@@ -44,9 +44,15 @@ public class ColorRasterization implements RasterizationAlgorithm {
                 minY = Math.max(minY, -1);
                 maxY = Math.min(maxY, 1);
 
-                for (float x = minX; x <= maxX; x += (float) 1 / width) {
-                    for (float y = minY; y <= maxY; y += (float) 1 / height) {
-                        Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(x, y, v1, v2, v3);
+                for (int x = (int) Math.floor(minX * width / 2 + width / 2.0f);
+                     x <= Math.ceil(maxX * width / 2 + width / 2.0f); x++) {
+                    for (int y = (int) Math.floor(-maxY * height / 2 + height / 2.0f);
+                         y <= Math.ceil(-minY * height / 2 + height / 2.0f); y++) {
+                        Vector3f barycentricCoords = BarycentricCoordinates.toBarycentricCoordinates(
+                                2.0f * x / width - 1,
+                                -2.0f * y / height + 1,
+                                v1, v2, v3
+                        );
 
                         if (barycentricCoords.x < 0 || barycentricCoords.y < 0 || barycentricCoords.z < 0
                                 || barycentricCoords.x > 1 || barycentricCoords.y > 1 || barycentricCoords.z > 1)
@@ -56,9 +62,7 @@ public class ColorRasterization implements RasterizationAlgorithm {
 
                         if (Math.abs(z) > 1) continue;
 
-                        int newX = (int) (x * width + width / 2.0F);
-                        int newY = (int) (-y * height + height / 2.0F);
-                        Pixel pixel = new Pixel(newX, newY);
+                        Pixel pixel = new Pixel(x, y);
                         if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
                             float eps = 0.01f;
                             if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
