@@ -1,6 +1,6 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
-import com.edu.vsu.kretov.daniil.mathLib4Task.AphineTransforms.AffineTransformations;
+import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.kretov.daniil.render_engine.Camera;
@@ -24,7 +24,7 @@ public class ColorRasterization implements RasterizationAlgorithm {
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
-            Model mesh = AffineTransformations.MakeInWorldCoord(model);
+            Model mesh = AffineTransformations.makeInWorldCoord(model);
             for (Polygon polygon : mesh.polygons) {
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());

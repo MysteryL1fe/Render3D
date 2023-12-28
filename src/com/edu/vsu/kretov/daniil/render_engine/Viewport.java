@@ -1,6 +1,7 @@
 package com.edu.vsu.kretov.daniil.render_engine;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.MainFrame;
 
 import javax.swing.*;
@@ -60,10 +61,10 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
         switch (mainFrame.getCameraState()) {
             case MOVE_CAMERA -> {
-                moveCamera();
+                moveCamera(cursorMoveXPercent, cursorMoveYPercent);
             }
             case ROTATE_CAMERA -> {
-                rotateCamera();
+                rotateCamera(0.0349066F);
             }
         }
 
@@ -123,29 +124,29 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W -> {
-                moveCamera();
+            case KeyEvent.VK_W-> {
+                moveCamera(0,10);
             }
             case KeyEvent.VK_A -> {
-                moveCamera();
+                moveCamera(10,0);
             }
             case KeyEvent.VK_S -> {
-                moveCamera();
+                moveCamera(0,-10);
             }
             case KeyEvent.VK_D -> {
-                moveCamera();
+                moveCamera(-10,0);
             }
             case KeyEvent.VK_I -> {
-                rotateCamera();
+                rotateCamera(0.0349066F);
             }
             case KeyEvent.VK_J -> {
-                rotateCamera();
+                rotateCamera(0.0349066F);
             }
             case KeyEvent.VK_K -> {
-                rotateCamera();
+                rotateCamera(-0.0349066F);
             }
             case KeyEvent.VK_L -> {
-                rotateCamera();
+                rotateCamera(0.0349066F);
             }
         }
     }
@@ -154,24 +155,31 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     public void mouseWheelMoved(MouseWheelEvent e) {
         int scrollAmount = e.getScrollAmount();
 
-        zoomCamera();
+        zoomCamera(scrollAmount);
     }
 
-    private void moveCamera() {
+    private void moveCamera(float difX, float difY) {
         Camera camera = mainFrame.getSelectedCamera();
+        Vector3f change = camera.getPosition();
+        Vector3f changeT = camera.getTarget();
+        camera.setPosition(change.set(change.x + difX, change.y + difY, change.z));
+        camera.moveTarget(changeT.set(changeT.x + difX,changeT.y + difY, changeT.z));
+    mainFrame.render();
+    }
 
+    private void rotateCamera(float arc) {
+        Camera camera = mainFrame.getSelectedCamera();
+        Vector3f change = camera.getPosition();
+        camera.moveTarget(change.set((float) (change.x * Math.sin(arc)), (float) ( change.y * Math.cos(arc)), change.z));
+        mainFrame.render();
 
     }
 
-    private void rotateCamera() {
+    private void zoomCamera(float scale) {
         Camera camera = mainFrame.getSelectedCamera();
-
-
-    }
-
-    private void zoomCamera() {
-        Camera camera = mainFrame.getSelectedCamera();
-
+        Vector3f change = camera.getPosition();
+        camera.moveTarget(change.set( (change.x * scale),  ( change.y * scale), change.z));
+        mainFrame.render();
 
     }
 }
