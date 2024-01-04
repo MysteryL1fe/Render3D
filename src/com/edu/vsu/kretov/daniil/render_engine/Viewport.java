@@ -17,6 +17,9 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     public Viewport(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
+        addMouseListener(this);
+        addKeyListener(this);
+        addMouseWheelListener(this);
     }
 
     public void drawPixel(int x, int y, Color color) {
@@ -38,7 +41,7 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // Не используется в данном примере, но необходимо реализовать из-за интерфейса
+        requestFocusInWindow();
     }
 
     @Override
@@ -123,6 +126,7 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     @Override
     public void keyReleased(KeyEvent e) {
+        System.out.println(e);
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W-> {
                 moveCamera(0,10);
