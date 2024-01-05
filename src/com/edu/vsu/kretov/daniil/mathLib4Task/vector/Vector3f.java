@@ -283,27 +283,6 @@ public class Vector3f implements Vector<Vector3f> {
         this.z /= len;
         return this;
     }
-
-    /**
-     * @param x The x component of the vector.
-     * @param y The y component of the vector.
-     * @param z The z component of the vector.
-     * @return The length of the given vector.
-     */
-    public static float len(float x, float y, float z) {
-        return (float) Math.sqrt(x * x + y * y + z * z);
-    }
-
-    /**
-     * @param x The x component of the vector.
-     * @param y The y component of the vector.
-     * @param z The z component of the vector.
-     * @return The square of the length of the given vector.
-     */
-    public static float len2(float x, float y, float z) {
-        return x * x + y * y + z * z;
-    }
-
     @Override
     public float len() {
         return (float) Math.sqrt(x * x + y * y + z * z);
@@ -763,9 +742,5 @@ public class Vector3f implements Vector<Vector3f> {
         float newZ = this.x * v.y - this.y * v.x;
         return new Vector3f(newX, newY, newZ);
     }
-
-
-
-
 
 }

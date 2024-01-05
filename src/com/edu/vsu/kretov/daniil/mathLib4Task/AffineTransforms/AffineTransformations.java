@@ -68,12 +68,6 @@ public class AffineTransformations {
             Vector3f rotatedVertex = rotatePoint(model.vertices.get(i), angleX, angleY, angleZ);
             model.vertices.set(i, rotatedVertex);
         }
-
-        // Поворот нормалей
-        for (int i = 0; i < model.normals.size(); i++) {
-            Vector3f rotatedNormal = rotatePoint(model.normals.get(i), angleX, angleY, angleZ);
-            model.normals.set(i, rotatedNormal);
-        }
     }
 
     // Вспомогательный метод для поворота точки вокруг осей X, Y и Z
@@ -123,12 +117,17 @@ public class AffineTransformations {
         return new Vector3f(x, y, point.z);
     }
     public static Model makeInWorldCoord(ModelInScene model) {
-        Model resModel = model.getModel();
+        Model resModel = model.getModel().clone();
         if (model.getScale().x != 1 ||  model.getScale().y !=1 ||  model.getScale().z !=1)
         scale(resModel.vertices, model.getScale().x,  model.getScale().y,  model.getScale().z);
         if (model.getRotation().x != 0 ||  model.getRotation().y !=0 ||  model.getRotation().z !=0)
             rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
         translate(resModel.vertices, model.getPosition().x,  model.getPosition().y,  model.getPosition().z);
+
+
+        scale(resModel.normals, model.getScale().x,  model.getScale().y,  model.getScale().z);
+        rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
+        translate(resModel.normals, model.getPosition().x,  model.getPosition().y,  model.getPosition().z);
 
        return resModel;
     }

@@ -67,7 +67,7 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
                 moveCamera(cursorMoveXPercent, cursorMoveYPercent);
             }
             case ROTATE_CAMERA -> {
-                rotateCamera(0.0349066F);
+//                rotateCamera(0.0349066F);
             }
         }
 
@@ -126,7 +126,6 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println(e);
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W-> {
                 moveCamera(0,10);
@@ -141,16 +140,16 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
                 moveCamera(-10,0);
             }
             case KeyEvent.VK_I -> {
-                rotateCamera(0.0349066F);
+                rotateCamera(0.0349066F, 1);
             }
             case KeyEvent.VK_J -> {
-                rotateCamera(0.0349066F);
+                rotateCamera(0.0349066F, 2);
             }
             case KeyEvent.VK_K -> {
-                rotateCamera(-0.0349066F);
+                rotateCamera(0.0349066F, 3);
             }
             case KeyEvent.VK_L -> {
-                rotateCamera(0.0349066F);
+                rotateCamera(0.0349066F, 4);
             }
         }
     }
@@ -158,8 +157,8 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         int scrollAmount = e.getScrollAmount();
-
-        zoomCamera(scrollAmount);
+        double scrollType = e.getPreciseWheelRotation();
+        zoomCamera((float) (scrollAmount * 0.35), scrollType);
     }
 
     private void moveCamera(float difX, float difY) {
@@ -171,18 +170,47 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     mainFrame.render();
     }
 
-    private void rotateCamera(float arc) {
+    private void rotateCamera(float arc, int rType) {
         Camera camera = mainFrame.getSelectedCamera();
         Vector3f change = camera.getPosition();
-        camera.moveTarget(change.set((float) (change.x * Math.sin(arc)), (float) ( change.y * Math.cos(arc)), change.z));
-        mainFrame.render();
+        float sin = (float) Math.sin(arc);
+        float cos = (float) Math.cos(arc);
+        float sinNegat = (float) Math.sin(-arc);
+        float cosNegat = (float) Math.cos(-arc);
 
+        switch (rType) {
+            case 1:
+                camera.movePosSet(new Vector3f(change.x, change.y * cos - change.z * sin, change.y * sin + change.z * cos));
+//                camera.aBitDiffrentMoveTarget(new Vector3f(0, change.y * cosA - change.z * sinA, change.y * sinA + change.z * cosA));
+                break;
+            case 2:
+                camera.movePosSet(new Vector3f(change.x * cos + change.z * sin, change.y, -change.x * sin + change.z * cos));
+                break;
+            case 3:
+                camera.movePosSet(new Vector3f(change.x, change.y * cosNegat - change.z * sinNegat, change.y * sinNegat + change.z * cosNegat));
+
+                break;
+            case 4:
+                camera.movePosSet(new Vector3f(change.x * cosNegat + change.z * sinNegat, change.y, -change.x * sinNegat + change.z * cosNegat));
+
+                break;
+        }
+
+        mainFrame.render();
     }
 
-    private void zoomCamera(float scale) {
+
+
+
+    private void zoomCamera(float scale, double scrlType) {
         Camera camera = mainFrame.getSelectedCamera();
-        Vector3f change = camera.getPosition();
-        camera.moveTarget(change.set( (change.x * scale),  ( change.y * scale), change.z));
+        if(scrlType == 1.0) {
+            camera.movePosition(new Vector3f((scale), (scale), (scale)));
+        }
+        else {
+            if(camera.getPosition().y >= 30 )
+            camera.movePosition(new Vector3f(-(1/scale), -(1/scale), -(1/scale)));
+        }
         mainFrame.render();
 
     }

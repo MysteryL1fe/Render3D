@@ -292,6 +292,10 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(nameField);
 
         add(propertiesPanel);
+        addKeyListener(viewport);
+        addMouseListener(viewport);
+        addMouseWheelListener(viewport);
+
 
         saveButton.addActionListener(e -> {
             if (selectedModel != null) {
@@ -301,7 +305,7 @@ public class MainFrame extends JFrame {
                 selectedModel.setModelName(nameField.getText());
 
                 render();
-                locationXField.setText("0.0");
+/*                locationXField.setText("0.0");
                 locationYField.setText("0.0");
                 locationZField.setText("0.0");
                 scaleXField.setText("1.0");
@@ -310,7 +314,7 @@ public class MainFrame extends JFrame {
 
                 rotationXField.setText("0.0");
                 rotationYField.setText("0.0");
-                rotationZField.setText("0.0");
+                rotationZField.setText("0.0");*/
 
                 // Additional logic to update the selected model in the 3D scene
                 System.out.println("Изменения сохранены для модели: " + selectedModel.getModelName());
