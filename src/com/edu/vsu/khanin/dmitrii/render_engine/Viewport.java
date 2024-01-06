@@ -64,7 +64,7 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
         switch (mainFrame.getCameraState()) {
             case MOVE_CAMERA -> {
-                moveCamera(cursorMoveXPercent, cursorMoveYPercent);
+//                moveCamera(cursorMoveXPercent, cursorMoveYPercent);
             }
             case ROTATE_CAMERA -> {
 //                rotateCamera(0.0349066F);
@@ -128,16 +128,16 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W-> {
-                moveCamera(0,10);
+                moveCamera(-10,-10, -10);
             }
             case KeyEvent.VK_A -> {
-                moveCamera(10,0);
+                moveCamera(-10,0,10);
             }
             case KeyEvent.VK_S -> {
-                moveCamera(0,-10);
+                moveCamera(10,10, 10);
             }
             case KeyEvent.VK_D -> {
-                moveCamera(-10,0);
+                moveCamera(10,0,-10);
             }
             case KeyEvent.VK_I -> {
                 rotateCamera(0.0349066F, 1);
@@ -161,18 +161,19 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         zoomCamera((float) (scrollAmount * 0.35), scrollType);
     }
 
-    private void moveCamera(float difX, float difY) {
+    private void moveCamera(float difX, float difY, float difZ) {
         Camera camera = mainFrame.getSelectedCamera();
         Vector3f change = camera.getPosition();
         Vector3f changeT = camera.getTarget();
-        camera.setPosition(change.set(change.x + difX, change.y + difY, change.z));
-        camera.moveTarget(changeT.set(changeT.x + difX,changeT.y + difY, changeT.z));
+        camera.movePosSet(new Vector3f(change.x + difX, change.y + difY, change.z + difZ));
+        camera.moveTargSet(new Vector3f(changeT.x + difX, changeT.y + difY, changeT.z + difZ));
     mainFrame.render();
     }
 
     private void rotateCamera(float arc, int rType) {
         Camera camera = mainFrame.getSelectedCamera();
         Vector3f change = camera.getPosition();
+        Vector3f changeT = camera.getTarget();
         float sin = (float) Math.sin(arc);
         float cos = (float) Math.cos(arc);
         float sinNegat = (float) Math.sin(-arc);
@@ -181,7 +182,6 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         switch (rType) {
             case 1:
                 camera.movePosSet(new Vector3f(change.x, change.y * cos - change.z * sin, change.y * sin + change.z * cos));
-//                camera.aBitDiffrentMoveTarget(new Vector3f(0, change.y * cosA - change.z * sinA, change.y * sinA + change.z * cosA));
                 break;
             case 2:
                 camera.movePosSet(new Vector3f(change.x * cos + change.z * sin, change.y, -change.x * sin + change.z * cos));

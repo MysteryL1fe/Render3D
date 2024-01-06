@@ -3,6 +3,7 @@ package com.edu.vsu.khanin.dmitrii.render_engine;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector4f;
 
 public class GraphicConveyor {
 
@@ -35,6 +36,22 @@ public class GraphicConveyor {
                 -resultX.dot(eye), -resultY.dot(eye), -resultZ.dot(eye), 1};
         return new Matrix4f(matrix);
     }
+    public static Vector3f worldToLocal(Vector3f worldPos, Matrix4f viewMatrix) {
+        Matrix4f inverseViewMatrix = new Matrix4f(viewMatrix).inv();
+
+        // Создаем 4-мерный вектор с x, y, z координатами мировой позиции и 1 в w
+        Vector4f worldPosHomogeneous = new Vector4f(worldPos.x, worldPos.y, worldPos.z, 1.0f);
+
+        // Умножаем вектор мировой позиции на обратную матрицу вида
+        Vector4f localPosHomogeneous = inverseViewMatrix.mul(worldPosHomogeneous);
+
+        // Делим на w, чтобы получить 3-мерные локальные координаты
+        localPosHomogeneous.div(localPosHomogeneous.w);
+
+        // Создаем и возвращаем 3-мерный вектор локальных координат
+        return new Vector3f(localPosHomogeneous.x, localPosHomogeneous.y, localPosHomogeneous.z);
+    }
+
 
     public static Matrix4f perspective(
             final float fov,
