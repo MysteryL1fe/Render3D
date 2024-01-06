@@ -1,8 +1,7 @@
-package com.edu.vsu.kretov.daniil.render_engine;
+package com.edu.vsu.khanin.dmitrii.render_engine;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
-import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector4f;
 
 public class Camera {
 
@@ -52,6 +51,7 @@ public class Camera {
     public void movePosition(final Vector3f translation) {
         this.position.add(translation);
     }
+
     public void movePosSet(final Vector3f translation) {
         this.position.set(translation);
     }
@@ -59,6 +59,7 @@ public class Camera {
     public void moveTarget(final Vector3f translation) {
         this.target.add(translation);
     }
+
     public void moveTargSet(final Vector3f translation) {
         this.target.set(translation);
     }
@@ -70,7 +71,8 @@ public class Camera {
     Matrix4f getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
     }
-    public void rotateView(float rotateX, float rotateY, float rotateZ) {
+
+    /*public void rotateView(float rotateX, float rotateY, float rotateZ) {
         // Convert angles to radians for trigonometric functions
         float radRotateX = (float) Math.toRadians(rotateX);
         float radRotateY = (float) Math.toRadians(rotateY);
@@ -87,8 +89,8 @@ public class Camera {
         // Update the view matrix
         Matrix4f viewMatrix = GraphicConveyor.lookAt(position, target);
         // Assuming you have a method to set the view matrix in GraphicConveyor
-        GraphicConveyor.multiplyMatrix4ByVector3(viewMatrix,relativePosition);
-    }
+        GraphicConveyor.multiplyMatrix4ByVector3(viewMatrix, relativePosition);
+    }*/
 
     private Vector3f position;
     private Vector3f target;

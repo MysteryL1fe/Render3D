@@ -68,7 +68,8 @@ public class Vector4f implements Vector<Vector4f> {
     /**
      * Constructs a zero vector.
      */
-    public Vector4f() { }
+    public Vector4f() {
+    }
 
     /**
      * Constructs a vector from the given float array. The array must have at least four values.

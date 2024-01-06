@@ -44,7 +44,7 @@ public class Vector2f implements Vector<Vector2f> {
     /**
      * Constructs a zero vector.
      */
-    public Vector2f() { }
+    public Vector2f() {}
 
     /**
      * Constructs a vector from the given float array. The array must have at least two values.
@@ -625,6 +625,7 @@ public class Vector2f implements Vector<Vector2f> {
     public boolean isZero(float epsilon) {
         return MathUtils.epsEquals(x * x + y * y, 0.0f, epsilon);
     }
+
     /**
      * Calculates the 2D cross product (wedge product) of this vector and another vector.
      *

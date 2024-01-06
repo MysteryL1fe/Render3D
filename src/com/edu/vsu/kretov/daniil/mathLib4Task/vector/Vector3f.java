@@ -57,7 +57,8 @@ public class Vector3f implements Vector<Vector3f> {
     /**
      * Constructs a zero vector.
      */
-    public Vector3f() { }
+    public Vector3f() {
+    }
 
     /**
      * Constructs a vector from the given float array. The array must have at least three values.
@@ -283,6 +284,7 @@ public class Vector3f implements Vector<Vector3f> {
         this.z /= len;
         return this;
     }
+
     @Override
     public float len() {
         return (float) Math.sqrt(x * x + y * y + z * z);
@@ -730,6 +732,7 @@ public class Vector3f implements Vector<Vector3f> {
     public boolean isZero(float epsilon) {
         return MathUtils.epsEquals(x * x + y * y + z * z, 0.0f, epsilon);
     }
+
     /**
      * Calculates the cross product of this vector and the given vector.
      *

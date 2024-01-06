@@ -60,7 +60,8 @@ public class MathUtils {
      */
     public static final float DEG_TO_RAD = PI / 180.0f;
 
-    private MathUtils() { }
+    private MathUtils() {
+    }
 
     /**
      * Performs an accurate floating-point equals comparison using epsilon.
@@ -241,12 +242,13 @@ public class MathUtils {
     public static float map(float v, float inMin, float inMax, float outMin, float outMax) {
         return outMin + (v - inMin) / (inMax - inMin) * (outMax - outMin);
     }
+
     /**
      * Finds the normal vector of a plane defined by three points.
      *
      * @return The normal vector of the plane.
      */
-    public static Vector3f normalizePolygon(Vector3f v1,Vector3f v2,Vector3f v3) {
+    public static Vector3f normalizePolygon(Vector3f v1, Vector3f v2, Vector3f v3) {
 
 
         // Calculate two vectors in the plane
@@ -254,10 +256,9 @@ public class MathUtils {
         Vector3f vector2 = v3.cpy().sub(v1);
 
         // Calculate the normal vector using the cross product
-        Vector3f normal = vector1.crossVect(vector2);
+        Vector3f normal = vector1.cpy().crs(vector2);
 
         // Normalize the normal vector
         return normal.nor();
     }
-
 }

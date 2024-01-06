@@ -1,4 +1,4 @@
-package com.edu.vsu.kretov.daniil.render_engine;
+package com.edu.vsu.khanin.dmitrii.render_engine;
 
 import com.edu.vsu.khanin.dmitrii.rasterization.*;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
@@ -7,7 +7,7 @@ import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.*;
+import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {
     private static RenderThread renderThread;
@@ -33,7 +33,7 @@ public class RenderEngine {
     }
 
     private static class RenderThread extends Thread {
-        private boolean isRenderActive;
+        private boolean isRenderActive = true;
         private final Viewport viewport;
         private final Camera camera;
         private final ArrayList<ModelInScene> sceneModels;
@@ -50,7 +50,6 @@ public class RenderEngine {
         @Override
         public void run() {
             super.run();
-            isRenderActive = true;
 
             Matrix4f modelMatrix = rotateScaleTranslate();
             Matrix4f viewMatrix = camera.getViewMatrix();

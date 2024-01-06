@@ -12,7 +12,7 @@ public class Model implements Cloneable {
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 
     @Override
-    public Model clone()  {
+    public Model clone() {
         Model model = new Model();
 
         ArrayList<Vector3f> newVertices = new ArrayList<>();

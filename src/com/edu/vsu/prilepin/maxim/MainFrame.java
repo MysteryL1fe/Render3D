@@ -3,9 +3,9 @@ package com.edu.vsu.prilepin.maxim;
 import com.edu.vsu.khanin.dmitrii.exceptions.TooLowVerticesException;
 import com.edu.vsu.khanin.dmitrii.preparation.PrepareModel;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
-import com.edu.vsu.kretov.daniil.render_engine.Camera;
-import com.edu.vsu.kretov.daniil.render_engine.RenderEngine;
-import com.edu.vsu.kretov.daniil.render_engine.Viewport;
+import com.edu.vsu.khanin.dmitrii.render_engine.Camera;
+import com.edu.vsu.khanin.dmitrii.render_engine.RenderEngine;
+import com.edu.vsu.khanin.dmitrii.render_engine.Viewport;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.obj.ObjReader;
@@ -22,18 +22,6 @@ import java.awt.Color;
 
 import static com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations.*;
 
-class FileInfo {
-    private final File file;
-
-    public FileInfo(File file) {
-        this.file = file;
-    }
-
-    public String getFileName() {
-        return file.getName();
-    }
-}
-
 public class MainFrame extends JFrame {
     private final Viewport viewport;
     private final JPanel propertiesPanel;
@@ -43,6 +31,7 @@ public class MainFrame extends JFrame {
     private ModelInScene selectedModel;
     private final JList<String> jCamList;
     private final DefaultListModel<String> camList;
+    private final ArrayList<Camera> cameras;
     private Camera selectedCamera;
     private final JTextField locationXField;
     private final JTextField locationYField;
@@ -67,6 +56,7 @@ public class MainFrame extends JFrame {
         setLayout(null);
 
         sceneModels = new ArrayList<>();
+        cameras = new ArrayList<>();
 
         modelList = new DefaultListModel<>();
         camList = new DefaultListModel<>();
@@ -183,11 +173,6 @@ public class MainFrame extends JFrame {
         viewport.setBounds(200, 20, 900, 700);
         viewport.setBorder(BorderFactory.createEtchedBorder());
         add(viewport);
-
-        selectedCamera = new Camera(
-                new Vector3f(100, 100, 100), new Vector3f(0, 0, 0),
-                1, 1, 0.1f, 1000
-        );
 
         propertiesPanel = new JPanel();
         propertiesPanel.setBounds(620, 20, 150, 400);
@@ -324,18 +309,31 @@ public class MainFrame extends JFrame {
         });
 
         createCameraButton.addActionListener(e -> {
+            Camera camera = new Camera(
+                    new Vector3f(100, 100, 100), new Vector3f(0, 0, 0),
+                    1, 1, 0.1f, 1000
+            );
+            cameras.add(camera);
             String newCameraName = "Camera" + (camList.getSize() + 1); // Генерация нового имени камеры
             camList.addElement(newCameraName); // Добавление новой камеры в список
-            jCamList.setModel(camList); // Обновление отображения списка камер
         });
 
         deleteCameraButton.addActionListener(e -> {
             int selectedIndex = jCamList.getSelectedIndex();
             if (selectedIndex != -1 && camList.size() > 1) {
+                cameras.remove(selectedIndex);
                 camList.remove(selectedIndex);
-                jCamList.setModel(camList); // Обновление jCamList
+                selectedCamera = cameras.get(0);
             } else {
                 JOptionPane.showMessageDialog(frame, "Нельзя удалить последнюю камеру");
+            }
+        });
+
+        jCamList.addListSelectionListener(e -> {
+            int selectedIndex = jCamList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                selectedCamera = cameras.get(selectedIndex);
+                render();
             }
         });
 
@@ -349,7 +347,7 @@ public class MainFrame extends JFrame {
 
                 render();
 
-                System.out.println("Model filled with color: " + selectedModel.getModelName());
+                System.out.println("Model filled with color: " + selectedModel.getColor());
             } else {
                 JOptionPane.showMessageDialog(frame, "Выберите модель для закраски");
             }
@@ -465,6 +463,28 @@ public class MainFrame extends JFrame {
         camList.addElement("Camera1");
         jCamList.setModel(camList);
 
+        selectedCamera = new Camera(
+                new Vector3f(100, 100, 100), new Vector3f(0, 0, 0),
+                1, 1, 0.1f, 1000
+        );
+        cameras.add(selectedCamera);
+
+        camList.addElement("Camera2");
+        camList.addElement("Camera3");
+        camList.addElement("Camera4");
+        cameras.add(new Camera(
+                new Vector3f(-100, 100, 100), new Vector3f(0, 0, 0),
+                1, 1, 0.1f, 1000
+        ));
+        cameras.add(new Camera(
+                new Vector3f(-100, 100, -100), new Vector3f(0, 0, 0),
+                1, 1, 0.1f, 1000
+        ));
+        cameras.add(new Camera(
+                new Vector3f(100, 100, -100), new Vector3f(0, 0, 0),
+                1, 1, 0.1f, 1000
+        ));
+
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
@@ -536,6 +556,18 @@ public class MainFrame extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MainFrame::new);
+    }
+
+    class FileInfo {
+        private final File file;
+
+        public FileInfo(File file) {
+            this.file = file;
+        }
+
+        public String getFileName() {
+            return file.getName();
+        }
     }
 }
 

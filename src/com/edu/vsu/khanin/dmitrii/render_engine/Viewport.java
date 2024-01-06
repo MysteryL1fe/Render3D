@@ -1,4 +1,4 @@
-package com.edu.vsu.kretov.daniil.render_engine;
+package com.edu.vsu.khanin.dmitrii.render_engine;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;

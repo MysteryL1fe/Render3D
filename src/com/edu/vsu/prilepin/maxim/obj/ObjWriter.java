@@ -44,14 +44,14 @@ public class ObjWriter {
         printWriter.println();
     }
 
-    protected static void writeNormalsOfModel(PrintWriter printWriter, List<Vector3f> normals){
+    protected static void writeNormalsOfModel(PrintWriter printWriter, List<Vector3f> normals) {
         for (Vector3f normal : normals) {
             printWriter.println(OBJ_NORMAL_TOKEN + " " + normal.x + " " + normal.y + " " + normal.z);
         }
         printWriter.println();
     }
 
-    protected static void writePolygonsOfModel(PrintWriter printWriter, List<Polygon> polygons){
+    protected static void writePolygonsOfModel(PrintWriter printWriter, List<Polygon> polygons) {
         for (Polygon polygon : polygons) {
             printWriter.print(modelsPolygonToFaceForObjFile(polygon.getVertexIndices(), polygon.getTextureVertexIndices(), polygon.getNormalIndices()));
             printWriter.println();
@@ -60,7 +60,7 @@ public class ObjWriter {
 
     private static String modelsPolygonToFaceForObjFile(List<Integer> vertexIndices, List<Integer> textureVertexIndices, List<Integer> normalIndices) {
         StringBuilder objFace = new StringBuilder();
-        objFace.append(OBJ_FACE_TOKEN+" ");
+        objFace.append(OBJ_FACE_TOKEN + " ");
 
         for (int i = 0; i < vertexIndices.size(); i++) {
 

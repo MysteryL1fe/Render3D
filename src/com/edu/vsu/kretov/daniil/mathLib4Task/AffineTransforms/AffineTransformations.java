@@ -11,10 +11,10 @@ public class AffineTransformations {
     /**
      * Scales the model by the given factors.
      *
-     * @param vertices   The model to be scaled.
-     * @param scaleX  The scaling factor along the x-axis.
-     * @param scaleY  The scaling factor along the y-axis.
-     * @param scaleZ  The scaling factor along the z-axis.
+     * @param vertices The model to be scaled.
+     * @param scaleX   The scaling factor along the x-axis.
+     * @param scaleY   The scaling factor along the y-axis.
+     * @param scaleZ   The scaling factor along the z-axis.
      */
     public static void scale(ArrayList<Vector3f> vertices, float scaleX, float scaleY, float scaleZ) {
         for (Vector3f vertex : vertices) {
@@ -27,7 +27,7 @@ public class AffineTransformations {
     /**
      * Translates the model by the given offsets.
      *
-     * @param vertices    The model to be translated.
+     * @param vertices The model to be translated.
      * @param offsetX  The translation offset along the x-axis.
      * @param offsetY  The translation offset along the y-axis.
      * @param offsetZ  The translation offset along the z-axis.
@@ -116,19 +116,31 @@ public class AffineTransformations {
 
         return new Vector3f(x, y, point.z);
     }
+
     public static Model makeInWorldCoord(ModelInScene model) {
         Model resModel = model.getModel().clone();
-        if (model.getScale().x != 1 ||  model.getScale().y !=1 ||  model.getScale().z !=1)
-        scale(resModel.vertices, model.getScale().x,  model.getScale().y,  model.getScale().z);
-        if (model.getRotation().x != 0 ||  model.getRotation().y !=0 ||  model.getRotation().z !=0)
+
+        if (model.getScale().x != 1 || model.getScale().y != 1 || model.getScale().z != 1)
+            scale(resModel.vertices, model.getScale().x, model.getScale().y, model.getScale().z);
+        if (model.getRotation().x != 0 || model.getRotation().y != 0 || model.getRotation().z != 0)
             rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
-        translate(resModel.vertices, model.getPosition().x,  model.getPosition().y,  model.getPosition().z);
+        translate(resModel.vertices, model.getPosition().x, model.getPosition().y, model.getPosition().z);
 
+        for (int i = 0; i < resModel.normals.size(); i++) {
+            resModel.normals.set(
+                    i,
+                    rotateZ(
+                            rotateY(
+                                    rotateX(
+                                            resModel.normals.get(i),
+                                            model.getRotation().x
+                                    ),
+                                    model.getRotation().y
+                            ),
+                            model.getRotation().z
+                    ).nor());
+        }
 
-        scale(resModel.normals, model.getScale().x,  model.getScale().y,  model.getScale().z);
-        rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
-        translate(resModel.normals, model.getPosition().x,  model.getPosition().y,  model.getPosition().z);
-
-       return resModel;
+        return resModel;
     }
 }

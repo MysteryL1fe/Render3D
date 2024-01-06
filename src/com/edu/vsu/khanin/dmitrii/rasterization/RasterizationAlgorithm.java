@@ -1,7 +1,7 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
-import com.edu.vsu.kretov.daniil.render_engine.Camera;
+import com.edu.vsu.khanin.dmitrii.render_engine.Camera;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 
 import java.awt.*;

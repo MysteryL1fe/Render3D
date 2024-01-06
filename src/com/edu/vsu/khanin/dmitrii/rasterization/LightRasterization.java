@@ -1,11 +1,10 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
-import com.edu.vsu.khanin.dmitrii.preparation.PolygonWithNormal;
 import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
-import com.edu.vsu.kretov.daniil.render_engine.Camera;
+import com.edu.vsu.khanin.dmitrii.render_engine.Camera;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
@@ -19,7 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
+import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
 
 public class LightRasterization implements RasterizationAlgorithm {
     @Override
@@ -35,11 +34,12 @@ public class LightRasterization implements RasterizationAlgorithm {
             if (model.getPath() != null) {
                 try {
                     img = ImageIO.read(model.getPath().toFile());
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
 
             for (Polygon polygon : mesh.polygons) {
-                float k = 0.75f;
+                float k = 1f;
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
                 Vector3f v3 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(2)).cpy());
@@ -68,6 +68,7 @@ public class LightRasterization implements RasterizationAlgorithm {
                     textureIndex3 = polygon.getTextureVertexIndices().get(2);
                 }
 
+                Vector3f ray = camera.getTarget().cpy().sub(camera.getPosition()).nor();
                 Vector3f normal1 = null;
                 Vector3f normal2 = null;
                 Vector3f normal3 = null;
@@ -94,126 +95,85 @@ public class LightRasterization implements RasterizationAlgorithm {
                         if (Math.abs(z) > 1) continue;
 
                         Pixel pixel = new Pixel(x, y);
-                        if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
-                            if (Math.min(textureIndex1, Math.min(textureIndex2, textureIndex3)) > -1) {
-                                // set pixel color from texture
-                                Vector2f textureCoords1 = mesh.textureVertices.get(textureIndex1);
-                                Vector2f textureCoords2 = mesh.textureVertices.get(textureIndex2);
-                                Vector2f textureCoords3 = mesh.textureVertices.get(textureIndex3);
+                        if (zBuffer.containsKey(pixel) && zBuffer.get(pixel).zBuffer < z) continue;
 
-                                Vector2f textureCoords = new Vector2f(
-                                        (textureCoords1.x * barycentricCoords.x
-                                                + textureCoords2.x * barycentricCoords.y
-                                                + textureCoords3.x * barycentricCoords.z) * img.getWidth(),
-                                        (textureCoords1.y * barycentricCoords.x
-                                                + textureCoords2.y * barycentricCoords.y
-                                                + textureCoords3.y * barycentricCoords.z) * img.getHeight()
-                                );
+                        if (Math.min(textureIndex1, Math.min(textureIndex2, textureIndex3)) > -1) {
+                            // set pixel color from texture
+                            Vector2f textureCoords1 = mesh.textureVertices.get(textureIndex1);
+                            Vector2f textureCoords2 = mesh.textureVertices.get(textureIndex2);
+                            Vector2f textureCoords3 = mesh.textureVertices.get(textureIndex3);
 
-                                int color = img.getRGB((int) textureCoords.x, (int) textureCoords.y);
-                                int red = (color >> 16) & 0xff;
-                                int green = (color >> 8) & 0xff;
-                                int blue = (color) & 0xff;
+                            Vector2f textureCoords = new Vector2f(
+                                    (textureCoords1.x * barycentricCoords.x
+                                            + textureCoords2.x * barycentricCoords.y
+                                            + textureCoords3.x * barycentricCoords.z) * img.getWidth(),
+                                    (textureCoords1.y * barycentricCoords.x
+                                            + textureCoords2.y * barycentricCoords.y
+                                            + textureCoords3.y * barycentricCoords.z) * img.getHeight()
+                            );
 
-                                if (normal1 != null && normal2 != null && normal3 != null) {
-                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
-                                    Vector3f n = new Vector3f(
-                                            normal1.x * barycentricCoords.x
-                                                    + normal2.x * barycentricCoords.y
-                                                    + normal3.x * barycentricCoords.z,
-                                            normal1.y * barycentricCoords.x
-                                                    + normal2.y * barycentricCoords.y
-                                                    + normal3.y * barycentricCoords.z,
-                                            normal1.z * barycentricCoords.x
-                                                    + normal2.z * barycentricCoords.y
-                                                    + normal3.z * barycentricCoords.z
-                                    ).nor();
+                            int color = img.getRGB((int) textureCoords.x, (int) textureCoords.y);
+                            int red = (color >> 16) & 0xff;
+                            int green = (color >> 8) & 0xff;
+                            int blue = (color) & 0xff;
 
-                                    Vector3f lVec = n.cpy().scl(ray);
-                                    float l = lVec.x + lVec.y + lVec.z;
+                            if (normal1 != null && normal2 != null && normal3 != null) {
+                                Vector3f n = new Vector3f(
+                                        normal1.x * barycentricCoords.x
+                                                + normal2.x * barycentricCoords.y
+                                                + normal3.x * barycentricCoords.z,
+                                        normal1.y * barycentricCoords.x
+                                                + normal2.y * barycentricCoords.y
+                                                + normal3.y * barycentricCoords.z,
+                                        normal1.z * barycentricCoords.x
+                                                + normal2.z * barycentricCoords.y
+                                                + normal3.z * barycentricCoords.z
+                                ).nor();
 
-                                    if (l < 0) {
-                                        red = 0;
-                                        green = 0;
-                                        blue = 0;
-                                    } else {
-                                        red = (int) (red * (1 - k) + (red * k * l));
-                                        green = (int) (green * (1 - k) + (green * k * l));
-                                        blue = (int) (blue * (1 - k) + (blue * k * l));
-                                    }
-                                } else if (polygon instanceof PolygonWithNormal) {
-                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
-                                    Vector3f n = ((PolygonWithNormal) polygon).getNormal().cpy();
+                                float l = -n.cpy().dot(ray);
 
-                                    Vector3f lVec = n.cpy().scl(ray);
-                                    float l = lVec.x + lVec.y + lVec.z;
-
-                                    if (l < 0) {
-                                        red = 0;
-                                        green = 0;
-                                        blue = 0;
-                                    } else {
-                                        red = (int) (red * (1 - k) + (red * k * l));
-                                        green = (int) (green * (1 - k) + (green * k * l));
-                                        blue = (int) (blue * (1 - k) + (blue * k * l));
-                                    }
+                                if (l < 0) red = green = blue = 0;
+                                else {
+                                    red = (int) (red * (1 - k) + (red * k * l));
+                                    green = (int) (green * (1 - k) + (green * k * l));
+                                    blue = (int) (blue * (1 - k) + (blue * k * l));
                                 }
-
-                                zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
-                            } else {
-                                // set pixel from model's color
-                                int red = model.getColor().getRed();
-                                int green = model.getColor().getGreen();
-                                int blue = model.getColor().getBlue();
-
-                                if (normal1 != null && normal2 != null && normal3 != null) {
-                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
-                                    Vector3f n = new Vector3f(
-                                            normal1.x * barycentricCoords.x
-                                                    + normal2.x * barycentricCoords.y
-                                                    + normal3.x * barycentricCoords.z,
-                                            normal1.y * barycentricCoords.x
-                                                    + normal2.y * barycentricCoords.y
-                                                    + normal3.y * barycentricCoords.z,
-                                            normal1.z * barycentricCoords.x
-                                                    + normal2.z * barycentricCoords.y
-                                                    + normal3.z * barycentricCoords.z
-                                    ).nor();
-
-                                    Vector3f lVec = n.cpy().scl(ray);
-                                    float l = lVec.x + lVec.y + lVec.z;
-
-                                    if (l < 0) {
-                                        red = 0;
-                                        green = 0;
-                                        blue = 0;
-                                    } else {
-                                        red = (int) (red * (1 - k) + (red * k * l));
-                                        green = (int) (green * (1 - k) + (green * k * l));
-                                        blue = (int) (blue * (1 - k) + (blue * k * l));
-                                    }
-                                } else if (polygon instanceof PolygonWithNormal) {
-                                    Vector3f ray = new Vector3f(0, 0, 1).nor();
-                                    Vector3f n = ((PolygonWithNormal) polygon).getNormal().cpy();
-
-                                    Vector3f lVec = n.cpy().scl(ray);
-                                    float l = lVec.x + lVec.y + lVec.z;
-
-                                    if (l < 0) {
-                                        red = 0;
-                                        green = 0;
-                                        blue = 0;
-                                    } else {
-                                        red = (int) (red * (1 - k) + (red * k * l));
-                                        green = (int) (green * (1 - k) + (green * k * l));
-                                        blue = (int) (blue * (1 - k) + (blue * k * l));
-                                    }
-                                }
-
-                                zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
                             }
+
+                            zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
+                        } else {
+                            // set pixel from model's color
+                            int red = model.getColor().getRed();
+                            int green = model.getColor().getGreen();
+                            int blue = model.getColor().getBlue();
+
+                            if (normal1 != null && normal2 != null && normal3 != null) {
+                                Vector3f n = new Vector3f(
+                                        normal1.x * barycentricCoords.x
+                                                + normal2.x * barycentricCoords.y
+                                                + normal3.x * barycentricCoords.z,
+                                        normal1.y * barycentricCoords.x
+                                                + normal2.y * barycentricCoords.y
+                                                + normal3.y * barycentricCoords.z,
+                                        normal1.z * barycentricCoords.x
+                                                + normal2.z * barycentricCoords.y
+                                                + normal3.z * barycentricCoords.z
+                                ).nor();
+
+                                float l = -n.cpy().dot(ray);
+
+                                if (l < 0) red = green = blue = 0;
+                                else {
+                                    red = (int) (red * (1 - k) + (red * k * l));
+                                    green = (int) (green * (1 - k) + (green * k * l));
+                                    blue = (int) (blue * (1 - k) + (blue * k * l));
+                                }
+                            }
+
+                            zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
                         }
                     }
+
                 }
             }
         }

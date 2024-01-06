@@ -65,7 +65,7 @@ public class ModelInScene {
     }
 
     public void setColor(Color color) {
-        // Set color for the model
+        this.color = color;
     }
 
     public Color getColor() {

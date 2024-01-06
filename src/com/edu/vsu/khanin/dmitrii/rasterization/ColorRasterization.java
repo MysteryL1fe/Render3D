@@ -3,7 +3,7 @@ package com.edu.vsu.khanin.dmitrii.rasterization;
 import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
-import com.edu.vsu.kretov.daniil.render_engine.Camera;
+import com.edu.vsu.khanin.dmitrii.render_engine.Camera;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-import static com.edu.vsu.kretov.daniil.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
+import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
 
 public class ColorRasterization implements RasterizationAlgorithm {
     @Override
@@ -63,12 +63,13 @@ public class ColorRasterization implements RasterizationAlgorithm {
                         if (Math.abs(z) > 1) continue;
 
                         Pixel pixel = new Pixel(x, y);
-                        if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
-                            float eps = 0.01f;
-                            if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
-                                zBuffer.put(pixel, new ZBufferColor(z, Color.BLACK));
-                            else zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
-                        }
+                        if (zBuffer.containsKey(pixel) && zBuffer.get(pixel).zBuffer < z) continue;
+
+                        float eps = 0.01f;
+                        if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
+                            zBuffer.put(pixel, new ZBufferColor(z, Color.BLACK));
+                        else zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
+
                     }
                 }
             }
