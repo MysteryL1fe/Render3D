@@ -30,6 +30,14 @@ public class TextureRasterization implements RasterizationAlgorithm {
 
         for (ModelInScene model : sceneModels) {
             Model mesh = AffineTransformations.makeInWorldCoord(model);
+
+            BufferedImage img = null;
+            if (model.getPath() != null) {
+                try {
+                    img = ImageIO.read(model.getPath().toFile());
+                } catch (IOException ignored) {}
+            }
+
             for (Polygon polygon : mesh.polygons) {
                 Vector3f v1 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(0)).cpy());
                 Vector3f v2 = multiplyMatrix4ByVector3(mVPMatrix, mesh.vertices.get(polygon.getVertexIndices().get(1)).cpy());
@@ -49,23 +57,14 @@ public class TextureRasterization implements RasterizationAlgorithm {
                 minY = Math.max(minY, -1);
                 maxY = Math.min(maxY, 1);
 
-                BufferedImage img = null;
-
                 int textureIndex1 = -1;
                 int textureIndex2 = -1;
                 int textureIndex3 = -1;
 
-                if (polygon.getTextureVertexIndices().size() >= 3) {
+                if (img != null && polygon.getTextureVertexIndices().size() >= 3) {
                     textureIndex1 = polygon.getTextureVertexIndices().get(0);
                     textureIndex2 = polygon.getTextureVertexIndices().get(1);
                     textureIndex3 = polygon.getTextureVertexIndices().get(2);
-
-                    if (model.getPath() != null) {
-                        try {
-                            img = ImageIO.read(model.getPath().toFile());
-                        } catch (IOException ignored) {
-                        }
-                    }
                 }
 
                 for (int x = (int) Math.floor(minX * width / 2 + width / 2.0f);
@@ -86,7 +85,7 @@ public class TextureRasterization implements RasterizationAlgorithm {
 
                         Pixel pixel = new Pixel(x, y);
                         if (!zBuffer.containsKey(pixel) || zBuffer.get(pixel).zBuffer > z) {
-                            if (img != null) {
+                            if (Math.min(textureIndex1, Math.min(textureIndex2, textureIndex3)) > -1) {
                                 // set pixel color from texture
                                 Vector2f textureCoords1 = mesh.textureVertices.get(textureIndex1);
                                 Vector2f textureCoords2 = mesh.textureVertices.get(textureIndex2);
