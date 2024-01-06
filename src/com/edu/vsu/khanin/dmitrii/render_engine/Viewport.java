@@ -127,17 +127,17 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W-> {
-                moveCamera(0,10);
+            case KeyEvent.VK_W -> {
+                moveCamera(0, 10);
             }
             case KeyEvent.VK_A -> {
-                moveCamera(10,0);
+                moveCamera(10, 0);
             }
             case KeyEvent.VK_S -> {
-                moveCamera(0,-10);
+                moveCamera(0, -10);
             }
             case KeyEvent.VK_D -> {
-                moveCamera(-10,0);
+                moveCamera(-10, 0);
             }
             case KeyEvent.VK_I -> {
                 rotateCamera(0.0349066F, 1);
@@ -166,8 +166,8 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         Vector3f change = camera.getPosition();
         Vector3f changeT = camera.getTarget();
         camera.setPosition(change.set(change.x + difX, change.y + difY, change.z));
-        camera.moveTarget(changeT.set(changeT.x + difX,changeT.y + difY, changeT.z));
-    mainFrame.render();
+        camera.moveTarget(changeT.set(changeT.x + difX, changeT.y + difY, changeT.z));
+        mainFrame.render();
     }
 
     private void rotateCamera(float arc, int rType) {
@@ -200,16 +200,13 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     }
 
 
-
-
     private void zoomCamera(float scale, double scrlType) {
         Camera camera = mainFrame.getSelectedCamera();
-        if(scrlType == 1.0) {
+        if (scrlType == 1.0) {
             camera.movePosition(new Vector3f((scale), (scale), (scale)));
-        }
-        else {
-            if(camera.getPosition().y >= 30 )
-            camera.movePosition(new Vector3f(-(1/scale), -(1/scale), -(1/scale)));
+        } else {
+            if (camera.getPosition().y >= 30)
+                camera.movePosition(new Vector3f(-(1 / scale), -(1 / scale), -(1 / scale)));
         }
         mainFrame.render();
 
