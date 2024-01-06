@@ -2,6 +2,7 @@ package com.edu.vsu.kretov.daniil.render_engine;
 
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector4f;
 
 public class Camera {
 
@@ -35,6 +36,14 @@ public class Camera {
     public Vector3f getPosition() {
         return position;
     }
+/*
+    public Vector3f clone() {
+        Camera camera = new Camera(position,target,fov,aspectRatio,nearPlane,farPlane);
+        Vector3f v = new Vector3f(position.cpy());
+        camera.position = v;
+        return camera.position;
+    }
+*/
 
     public Vector3f getTarget() {
         return target;
@@ -43,9 +52,15 @@ public class Camera {
     public void movePosition(final Vector3f translation) {
         this.position.add(translation);
     }
+    public void movePosSet(final Vector3f translation) {
+        this.position.set(translation);
+    }
 
     public void moveTarget(final Vector3f translation) {
-        this.target.add(target);
+        this.target.add(translation);
+    }
+    public void moveTargSet(final Vector3f translation) {
+        this.target.set(translation);
     }
 
     Matrix4f getViewMatrix() {
@@ -54,6 +69,25 @@ public class Camera {
 
     Matrix4f getProjectionMatrix() {
         return GraphicConveyor.perspective(fov, aspectRatio, nearPlane, farPlane);
+    }
+    public void rotateView(float rotateX, float rotateY, float rotateZ) {
+        // Convert angles to radians for trigonometric functions
+        float radRotateX = (float) Math.toRadians(rotateX);
+        float radRotateY = (float) Math.toRadians(rotateY);
+        float radRotateZ = (float) Math.toRadians(rotateZ);
+
+        // Calculate the rotation matrix
+        Matrix4f rotationMatrix = Matrix4f.rotationXYZ(radRotateX, radRotateY, radRotateZ);
+
+        // Update the position and target using the rotation matrix
+        Vector3f relativePosition = position.sub(target);
+        Vector4f rotatedPosition = rotationMatrix.mul(new Vector4f(relativePosition));
+        position = target.add(new Vector3f(rotatedPosition));
+
+        // Update the view matrix
+        Matrix4f viewMatrix = GraphicConveyor.lookAt(position, target);
+        // Assuming you have a method to set the view matrix in GraphicConveyor
+        GraphicConveyor.multiplyMatrix4ByVector3(viewMatrix,relativePosition);
     }
 
     private Vector3f position;

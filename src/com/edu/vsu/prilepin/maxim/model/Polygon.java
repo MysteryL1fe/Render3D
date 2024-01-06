@@ -1,7 +1,7 @@
 package com.edu.vsu.prilepin.maxim.model;
 import java.util.ArrayList;
 
-public class Polygon {
+public class Polygon implements  Cloneable{
     private ArrayList<Integer> vertexIndices;
     private ArrayList<Integer> textureVertexIndices;
     private ArrayList<Integer> normalIndices;
@@ -38,5 +38,12 @@ public class Polygon {
 
     public ArrayList<Integer> getNormalIndices() {
         return normalIndices;
+    }
+    public Polygon clone(){
+        Polygon polygon = new Polygon();
+        polygon.vertexIndices = (ArrayList<Integer>) vertexIndices.clone();
+        polygon.normalIndices = (ArrayList<Integer>) normalIndices.clone();
+        polygon.textureVertexIndices = (ArrayList<Integer>) textureVertexIndices.clone();
+        return  polygon;
     }
 }
