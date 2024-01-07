@@ -121,23 +121,18 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W-> {
-                moveCamera(-10,-10, -10);
+                moveCamera(-5,-5, -5);
             }
             case KeyEvent.VK_A -> {
-                moveCamera(-10,0,10);
+                moveCamera(5,0,-5);
             }
             case KeyEvent.VK_S -> {
-                moveCamera(10,10, 10);
+                moveCamera(5,5, 5);
             }
             case KeyEvent.VK_D -> {
-                moveCamera(10,0,-10);
+                moveCamera(-5,0,5);
             }
             case KeyEvent.VK_I -> {
                 rotateCamera(0.0349066F, 1);
@@ -152,6 +147,11 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
                 rotateCamera(0.0349066F, 4);
             }
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     @Override

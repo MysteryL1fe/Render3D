@@ -12,6 +12,8 @@ import com.edu.vsu.prilepin.maxim.obj.ObjReader;
 import com.edu.vsu.prilepin.maxim.obj.ObjWriter;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.awt.Color;
+import  com.edu.vsu.prilepin.maxim.JFrameCirc.*;
 
 import static com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations.*;
 
@@ -85,6 +88,8 @@ public class MainFrame extends JFrame {
         JButton deleteCameraButton = new JButton("Удалить камеру");
         JButton saveModelButton = new JButton("Сохранить модель");
         JButton createColorButton = new JButton("Закрасить");
+        CircleButton helpButton = new CircleButton("?");
+
         redField = new JTextField();
         greenField = new JTextField();
         blueField = new JTextField();
@@ -141,6 +146,9 @@ public class MainFrame extends JFrame {
         colorRadioButton.setBounds(640, 0, 100, 20);
         textureRadioButton.setBounds(740, 0, 100, 20);
         lightRadioButton.setBounds(840, 0, 100, 20);
+        helpButton.setBounds(35, 40, 35, 35);
+        helpButton.setBackground(Color.BLUE);
+        helpButton.setForeground(Color.YELLOW);
 
         renderButtonGroup.add(contourRadioButton);
         renderButtonGroup.add(colorRadioButton);
@@ -185,6 +193,7 @@ public class MainFrame extends JFrame {
         propertiesPanel.add(greenField);
         propertiesPanel.add(blueField);
         propertiesPanel.add(createColorButton);
+        propertiesPanel.add(helpButton);
 
         JLabel locationLabel = new JLabel("Позиция:");
         JLabel locationLabelX = new JLabel("X");
@@ -350,6 +359,23 @@ public class MainFrame extends JFrame {
                 System.out.println("Model filled with color: " + selectedModel.getColor());
             } else {
                 JOptionPane.showMessageDialog(frame, "Выберите модель для закраски");
+            }
+        });
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "W - движение камеры вперёд\n" +
+                        "\n" +
+                        "A - движение камеры влево\n" +
+                        "\n" +
+                        "S - движение камеры назад\n" +
+                        "\n" +
+                        "D - движение камеры вправо\n" +
+                        "\n" +
+                        "I, J, K, L - вращение камеры вокруг разных осей\n" +
+                        "\n" +
+                        "Колесо мыши - изменение масштаба камеры\n" +
+                        "\n");
             }
         });
 

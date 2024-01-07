@@ -73,9 +73,9 @@ public class LightRasterization implements RasterizationAlgorithm {
                 Vector3f normal2 = null;
                 Vector3f normal3 = null;
                 if (polygon.getNormalIndices().size() >= 3) {
-                    normal1 = mesh.normals.get(polygon.getTextureVertexIndices().get(0));
-                    normal2 = mesh.normals.get(polygon.getTextureVertexIndices().get(1));
-                    normal3 = mesh.normals.get(polygon.getTextureVertexIndices().get(2));
+                    normal1 = mesh.normals.get(polygon.getNormalIndices().get(0));
+                    normal2 = mesh.normals.get(polygon.getNormalIndices().get(1));
+                    normal3 = mesh.normals.get(polygon.getNormalIndices().get(2));
                 }
 
                 for (int x = (int) Math.floor(minX * width / 2 + width / 2.0f);
