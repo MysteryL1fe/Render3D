@@ -65,11 +65,7 @@ public class ColorRasterization implements RasterizationAlgorithm {
                         Pixel pixel = new Pixel(x, y);
                         if (zBuffer.containsKey(pixel) && zBuffer.get(pixel).zBuffer < z) continue;
 
-                        float eps = 0.01f;
-                        if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps)
-                            zBuffer.put(pixel, new ZBufferColor(z, Color.BLACK));
-                        else zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
-
+                        zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
                     }
                 }
             }

@@ -1,10 +1,10 @@
 package com.edu.vsu.khanin.dmitrii.rasterization;
 
+import com.edu.vsu.khanin.dmitrii.render_engine.Camera;
 import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
-import com.edu.vsu.khanin.dmitrii.render_engine.Camera;
 import com.edu.vsu.prilepin.maxim.model.Model;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
@@ -20,12 +20,12 @@ import java.util.Objects;
 
 import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
 
-public class TextureRasterization implements RasterizationAlgorithm {
+public class TextureContourRasterization implements RasterizationAlgorithm {
     @Override
-    public HashSet<ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
-                                             Matrix4f mVPMatrix, int width, int height) {
-        HashSet<ColorPixel> colorPixels = new HashSet<>();
-        HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
+    public HashSet<RasterizationAlgorithm.ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
+                                                                    Matrix4f mVPMatrix, int width, int height) {
+        HashSet<RasterizationAlgorithm.ColorPixel> colorPixels = new HashSet<>();
+        HashMap<RasterizationAlgorithm.Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
             Model mesh = AffineTransformations.makeInWorldCoord(model);
@@ -83,8 +83,10 @@ public class TextureRasterization implements RasterizationAlgorithm {
 
                         if (Math.abs(z) > 1) continue;
 
-                        Pixel pixel = new Pixel(x, y);
+                        RasterizationAlgorithm.Pixel pixel = new RasterizationAlgorithm.Pixel(x, y);
                         if (zBuffer.containsKey(pixel) && zBuffer.get(pixel).zBuffer < z) continue;
+
+                        int red, green, blue;
 
                         if (Math.min(textureIndex1, Math.min(textureIndex2, textureIndex3)) > -1) {
                             // set pixel color from texture
@@ -111,21 +113,31 @@ public class TextureRasterization implements RasterizationAlgorithm {
                             textureY *= img.getHeight();
 
                             int color = img.getRGB((int) textureX, (int) textureY);
-                            int red = (color >> 16) & 0xff;
-                            int green = (color >> 8) & 0xff;
-                            int blue = (color) & 0xff;
-                            zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
+                            red = (color >> 16) & 0xff;
+                            green = (color >> 8) & 0xff;
+                            blue = (color) & 0xff;
                         } else {
                             // set pixel from model's color
-                            zBuffer.put(pixel, new ZBufferColor(z, model.getColor()));
+                            red = model.getColor().getRed();
+                            green = model.getColor().getGreen();
+                            blue = model.getColor().getBlue();
                         }
+
+                        float eps = 0.01f;
+                        if (barycentricCoords.x <= eps || barycentricCoords.y <= eps || barycentricCoords.z <= eps) {
+                            red = (int) (red * 0.8);
+                            green = (int) (green * 0.8);
+                            blue = (int) (blue * 0.8);
+                        }
+
+                        zBuffer.put(pixel, new ZBufferColor(z, new Color(red, green, blue)));
                     }
                 }
             }
         }
 
-        for (Pixel pixel : zBuffer.keySet())
-            colorPixels.add(new ColorPixel(pixel, zBuffer.get(pixel).color));
+        for (RasterizationAlgorithm.Pixel pixel : zBuffer.keySet())
+            colorPixels.add(new RasterizationAlgorithm.ColorPixel(pixel, zBuffer.get(pixel).color));
 
         return colorPixels;
     }

@@ -49,6 +49,10 @@ public class MainFrame extends JFrame {
     private final JLabel textureNameLabel; // Add a JLabel to display the texture name
     private FileInfo textureFileInfo; // Create a new class to hold file information
     private CameraState cameraState = CameraState.MOVE_CAMERA;
+    private final JCheckBox contourCheckBox;
+    private final JCheckBox colorCheckBox;
+    private final JCheckBox textureCheckBox;
+    private final JCheckBox lightCheckBox;
     private RenderEngine.RenderState renderState = RenderEngine.RenderState.CONTOUR;
 
     public MainFrame() {
@@ -113,45 +117,40 @@ public class MainFrame extends JFrame {
         JLabel renderLabel = new JLabel("Рендер:");
         renderLabel.setBounds(480, 0, 50, 20);
         add(renderLabel);
-        ButtonGroup renderButtonGroup = new ButtonGroup();
 
-        JRadioButton contourRadioButton = new JRadioButton("Контур");
-        JRadioButton colorRadioButton = new JRadioButton("Цвет");
-        JRadioButton textureRadioButton = new JRadioButton("Текстура");
-        JRadioButton lightRadioButton = new JRadioButton("Свет");
+        contourCheckBox = new JCheckBox("Контур");
+        colorCheckBox = new JCheckBox("Цвет");
+        textureCheckBox = new JCheckBox("Текстура");
+        lightCheckBox = new JCheckBox("Свет");
 
-        contourRadioButton.addActionListener(e -> {
-            renderState = RenderEngine.RenderState.CONTOUR;
+        contourCheckBox.addActionListener(e -> {
+            calcRenderState();
             render();
         });
-        colorRadioButton.addActionListener(e -> {
-            renderState = RenderEngine.RenderState.COLOR;
+        colorCheckBox.addActionListener(e -> {
+            calcRenderState();
             render();
         });
-        textureRadioButton.addActionListener(e -> {
-            renderState = RenderEngine.RenderState.TEXTURE;
+        textureCheckBox.addActionListener(e -> {
+            calcRenderState();
             render();
         });
-        lightRadioButton.addActionListener(e -> {
-            renderState = RenderEngine.RenderState.LIGHT;
+        lightCheckBox.addActionListener(e -> {
+            calcRenderState();
             render();
         });
 
-        contourRadioButton.setBounds(540, 0, 100, 20);
-        colorRadioButton.setBounds(640, 0, 100, 20);
-        textureRadioButton.setBounds(740, 0, 100, 20);
-        lightRadioButton.setBounds(840, 0, 100, 20);
+        contourCheckBox.setBounds(540, 0, 100, 20);
+        colorCheckBox.setBounds(640, 0, 100, 20);
+        textureCheckBox.setBounds(740, 0, 100, 20);
+        lightCheckBox.setBounds(840, 0, 100, 20);
 
-        renderButtonGroup.add(contourRadioButton);
-        renderButtonGroup.add(colorRadioButton);
-        renderButtonGroup.add(textureRadioButton);
-        renderButtonGroup.add(lightRadioButton);
-        contourRadioButton.setSelected(true);
+        contourCheckBox.setSelected(true);
 
-        add(contourRadioButton);
-        add(colorRadioButton);
-        add(textureRadioButton);
-        add(lightRadioButton);
+        add(contourCheckBox);
+        add(colorCheckBox);
+        add(textureCheckBox);
+        add(lightCheckBox);
 
         loadTextureButton.setBounds(100, 680, 180, 30);
         saveButton.setBounds(100, 720, 180, 30);
@@ -547,6 +546,29 @@ public class MainFrame extends JFrame {
 
     public void render() {
         RenderEngine.render(viewport, selectedCamera, sceneModels, renderState);
+    }
+
+    private void calcRenderState() {
+        if (colorCheckBox.isSelected() && textureCheckBox.isSelected()
+                || !contourCheckBox.isSelected() && !colorCheckBox.isSelected() && !textureCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.NONE;
+        else if (contourCheckBox.isSelected() && colorCheckBox.isSelected() && lightCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.LIGHT_COLOR_CONTOUR;
+        else if (contourCheckBox.isSelected() && textureCheckBox.isSelected() && lightCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.LIGHT_TEXTURE_CONTOUR;
+        else if (contourCheckBox.isSelected() && colorCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.COLOR_CONTOUR;
+        else if (contourCheckBox.isSelected() && textureCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.TEXTURE_CONTOUR;
+        else if (colorCheckBox.isSelected() && lightCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.LIGHT_COLOR;
+        else if (textureCheckBox.isSelected() && lightCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.LIGHT_TEXTURE;
+        else if (contourCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.CONTOUR;
+        else if (colorCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.COLOR;
+        else renderState = RenderEngine.RenderState.TEXTURE;
     }
 
     public enum CameraState {

@@ -1,12 +1,12 @@
-package com.edu.vsu.khanin.dmitrii.preparation;
+package com.edu.vsu.khanin.dmitrii.triangulation;
 
 import com.edu.vsu.khanin.dmitrii.exceptions.TooLowVerticesException;
 import com.edu.vsu.prilepin.maxim.model.Polygon;
 
 import java.util.ArrayList;
 
-public class SimpleTriangulation {
-    public static ArrayList<Polygon> toTriangles(ArrayList<Polygon> polygons) throws TooLowVerticesException {
+public class SimpleTriangulation implements TriangulationAlgorithm {
+    public ArrayList<Polygon> toTriangles(ArrayList<Polygon> polygons) throws TooLowVerticesException {
         if (polygons == null) return null;
 
         ArrayList<Polygon> triangles = new ArrayList<>();
@@ -18,7 +18,7 @@ public class SimpleTriangulation {
         return triangles;
     }
 
-    private static ArrayList<Polygon> triangulatePolygon(Polygon polygon) throws TooLowVerticesException {
+    private ArrayList<Polygon> triangulatePolygon(Polygon polygon) throws TooLowVerticesException {
         ArrayList<Polygon> triangles = new ArrayList<>();
 
         ArrayList<Integer> vertexIndices = polygon.getVertexIndices();
