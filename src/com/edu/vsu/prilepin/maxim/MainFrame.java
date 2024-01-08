@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.awt.Color;
+
 import com.edu.vsu.prilepin.maxim.JFrameCirc.*;
 
 import static com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations.*;
@@ -576,26 +577,25 @@ public class MainFrame extends JFrame {
     }
 
     private void calcRenderState() {
-        if (colorCheckBox.isSelected() && textureCheckBox.isSelected()
-                || !contourCheckBox.isSelected() && !colorCheckBox.isSelected() && !textureCheckBox.isSelected())
+        if (!contourCheckBox.isSelected() && !colorCheckBox.isSelected() && !textureCheckBox.isSelected())
             renderState = RenderEngine.RenderState.NONE;
-        else if (contourCheckBox.isSelected() && colorCheckBox.isSelected() && lightCheckBox.isSelected())
-            renderState = RenderEngine.RenderState.LIGHT_COLOR_CONTOUR;
         else if (contourCheckBox.isSelected() && textureCheckBox.isSelected() && lightCheckBox.isSelected())
             renderState = RenderEngine.RenderState.LIGHT_TEXTURE_CONTOUR;
-        else if (contourCheckBox.isSelected() && colorCheckBox.isSelected())
-            renderState = RenderEngine.RenderState.COLOR_CONTOUR;
+        else if (contourCheckBox.isSelected() && colorCheckBox.isSelected() && lightCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.LIGHT_COLOR_CONTOUR;
         else if (contourCheckBox.isSelected() && textureCheckBox.isSelected())
             renderState = RenderEngine.RenderState.TEXTURE_CONTOUR;
-        else if (colorCheckBox.isSelected() && lightCheckBox.isSelected())
-            renderState = RenderEngine.RenderState.LIGHT_COLOR;
+        else if (contourCheckBox.isSelected() && colorCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.COLOR_CONTOUR;
         else if (textureCheckBox.isSelected() && lightCheckBox.isSelected())
             renderState = RenderEngine.RenderState.LIGHT_TEXTURE;
+        else if (colorCheckBox.isSelected() && lightCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.LIGHT_COLOR;
         else if (contourCheckBox.isSelected())
             renderState = RenderEngine.RenderState.CONTOUR;
-        else if (colorCheckBox.isSelected())
-            renderState = RenderEngine.RenderState.COLOR;
-        else renderState = RenderEngine.RenderState.TEXTURE;
+        else if (textureCheckBox.isSelected())
+            renderState = RenderEngine.RenderState.TEXTURE;
+        else renderState = RenderEngine.RenderState.COLOR;
     }
 
     public enum CameraState {

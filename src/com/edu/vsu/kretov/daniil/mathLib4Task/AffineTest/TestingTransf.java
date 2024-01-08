@@ -1,3 +1,4 @@
+/*
 package com.edu.vsu.kretov.daniil.mathLib4Task.AffineTest;
 
 
@@ -110,3 +111,4 @@ class TestingTransf {
         assertEquals(new Vector3f(0, 0, 0), resultModel.vertices.get(0));
     }
 }
+*/

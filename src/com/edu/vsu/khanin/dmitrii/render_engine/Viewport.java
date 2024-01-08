@@ -1,7 +1,5 @@
 package com.edu.vsu.khanin.dmitrii.render_engine;
 
-import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
-import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.MainFrame;
 
@@ -24,12 +22,6 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         Graphics g = this.getGraphics();
         g.setColor(color);
         g.drawLine(x, y, x, y);
-    }
-
-    public void drawLine(Vector2f start, Vector2f end) {
-        Graphics g = this.getGraphics();
-        g.setColor(Color.BLACK);
-        g.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
     }
 
     public void clear() {
@@ -78,43 +70,21 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W-> {
-                moveCamera(0, 0, 5);
-            }
-            case KeyEvent.VK_A -> {
-                moveCamera(5, 0, 0);
-            }
-            case KeyEvent.VK_S -> {
-                moveCamera(0, 0, -5);
-            }
-            case KeyEvent.VK_D -> {
-                moveCamera(-5, 0, 0);
-            }
-            case KeyEvent.VK_Q -> {
-                moveCamera(0, -5, 0);
-            }
-            case KeyEvent.VK_E -> {
-                moveCamera(0, 5, 0);
-            }
-            case KeyEvent.VK_I -> {
-                rotateCamera(0.0349066F, 1);
-            }
-            case KeyEvent.VK_J -> {
-                rotateCamera(0.0349066F, 2);
-            }
-            case KeyEvent.VK_K -> {
-                rotateCamera(0.0349066F, 3);
-            }
-            case KeyEvent.VK_L -> {
-                rotateCamera(0.0349066F, 4);
-            }
+            case KeyEvent.VK_W -> moveCamera(0, 0, 5);
+            case KeyEvent.VK_A -> moveCamera(5, 0, 0);
+            case KeyEvent.VK_S -> moveCamera(0, 0, -5);
+            case KeyEvent.VK_D -> moveCamera(-5, 0, 0);
+            case KeyEvent.VK_Q -> moveCamera(0, -5, 0);
+            case KeyEvent.VK_E -> moveCamera(0, 5, 0);
+            case KeyEvent.VK_I -> rotateCamera(0.0349066F, 1);
+            case KeyEvent.VK_J -> rotateCamera(0.0349066F, 2);
+            case KeyEvent.VK_K -> rotateCamera(0.0349066F, 3);
+            case KeyEvent.VK_L -> rotateCamera(0.0349066F, 4);
         }
     }
 
@@ -128,14 +98,6 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         zoomCamera((float) (scrollAmount * 0.35), scrollType);
     }
 
-//    private void moveCameraMouse(float difX, float difY, float difZ) {
-//        Camera camera = mainFrame.getSelectedCamera();
-//        Vector3f change = camera.getPosition();
-//        Vector3f changeT = camera.getTarget();
-//        camera.movePosSet(new Vector3f(change.x + difX, change.y + difY, change.z + difZ));
-//        camera.moveTargSet(new Vector3f(changeT.x + difX, changeT.y + difY, changeT.z + difZ));
-//    mainFrame.render();
-//    }
     private void moveCamera(float difX, float difY, float difZ) {
         Camera camera = mainFrame.getSelectedCamera();
         Vector3f resultZ = camera.getTarget().cpy().sub(camera.getPosition());
@@ -185,39 +147,13 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         }
         mainFrame.render();
     }
-    private void rotateCameraMouse(float radX, float radY, float radZ) {
-        Camera camera = mainFrame.getSelectedCamera();
-        Vector3f resultZ = camera.getTarget().cpy().sub(camera.getPosition());
-        Vector3f resultX = new Vector3f(0, 1, 0).crs(resultZ);
-        Vector3f resultY = resultZ.cpy().crs(resultX);
-
-
-        resultY.nor();
-        resultX.nor();
-        resultZ.nor();
-        System.out.println(camera);
-        Vector3f v3f = camera.getTarget().cpy().sub(camera.getPosition());
-//        Vector3f v3 =new Vector3f();
-//        v3.y = (float) (v3f.y * Math.cos(radX) - v3f.z * Math.sin(radX));
-//        v3.z = (float) (v3f.y * Math.sin(radX) + v3f.z * Math.cos(radX));
-//        v3f = AffineTransformations.rotateY(v3f, radX);
-        camera.setTarget(AffineTransformations.rotateX(v3f, radY).add(camera.getPosition()));
-//        camera.setTarget(camera.getTarget().add(resultY.cpy().scl((float) Math.cos(radY))));
-
-
-        mainFrame.render();
-    }
-
 
     private void zoomCamera(float scale, double scrlType) {
         Camera camera = mainFrame.getSelectedCamera();
-        if (scrlType == 1.0) {
+        if (scrlType == 1.0)
             camera.movePosition(new Vector3f((scale), (scale), (scale)));
-        } else {
-            if (camera.getPosition().y >= 30)
-                camera.movePosition(new Vector3f(-(1 / scale), -(1 / scale), -(1 / scale)));
-        }
+        else if (camera.getPosition().y >= 30)
+            camera.movePosition(new Vector3f(-(1 / scale), -(1 / scale), -(1 / scale)));
         mainFrame.render();
-
     }
 }
