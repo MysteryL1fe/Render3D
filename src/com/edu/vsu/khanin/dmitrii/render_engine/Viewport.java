@@ -1,5 +1,6 @@
 package com.edu.vsu.khanin.dmitrii.render_engine;
 
+import com.edu.vsu.kretov.daniil.mathLib4Task.AffineTransforms.AffineTransformations;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.prilepin.maxim.MainFrame;
@@ -48,7 +49,7 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     public void mousePressed(MouseEvent e) {
         startX = e.getX();
         startY = e.getY();
-        //isMousePressed = true;
+
     }
 
     @Override
@@ -58,16 +59,17 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
         int cursorMoveX = endX - startX;
         int cursorMoveY = endY - startY;
-
+        Vector2f vector2f = GraphicConveyor.convertToCenterOrigin(cursorMoveX,cursorMoveY);
         float cursorMoveXPercent = (float) cursorMoveX / this.getBounds().width;
         float cursorMoveYPercent = (float) cursorMoveY / this.getBounds().height;
 
         switch (mainFrame.getCameraState()) {
             case MOVE_CAMERA -> {
-//                moveCamera(cursorMoveXPercent, cursorMoveYPercent);
+                moveCamera(cursorMoveX, cursorMoveY, 0);
             }
             case ROTATE_CAMERA -> {
-//                rotateCamera(0.0349066F);
+                rotateCamera((float) (cursorMoveXPercent * 2 * Math.PI), 2);
+                rotateCamera((float) (cursorMoveYPercent * 2 * Math.PI), 1);
             }
         }
 
@@ -76,7 +78,7 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // Не используется в данном примере, но необходимо реализовать из-за интерфейса
+
     }
 
     @Override
@@ -84,35 +86,6 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         // Не используется в данном примере, но необходимо реализовать из-за интерфейса
     }
 
-    /*@Override
-    public void mouseMoved(MouseEvent e) {
-         newX = e.getX();
-         newY = e.getY();
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        if (isMousePressed) {
-
-
-            // Определение направления движения
-            if (newX > XCameraPosition) {
-                System.out.println("Движение вправо");
-            } else if (newX < XCameraPosition) {
-                System.out.println("Движение влево");
-            }
-
-            if (newY > YCameryPosition) {
-                System.out.println("Движение вниз");
-            } else if (newY < YCameryPosition) {
-                System.out.println("Движение вверх");
-            }
-
-            // Обновление координат мыши
-            XCameraPosition = newX;
-            YCameryPosition = newY;
-        }
-    }*/
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -123,16 +96,22 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W-> {
-                moveCamera(-5,-5, -5);
+                moveCamera(0,0, 5);
             }
             case KeyEvent.VK_A -> {
-                moveCamera(5,0,-5);
+                moveCamera(5,0,0);
             }
             case KeyEvent.VK_S -> {
-                moveCamera(5,5, 5);
+                moveCamera(0,0, -5);
             }
             case KeyEvent.VK_D -> {
-                moveCamera(-5,0,5);
+                moveCamera(-5,0,0);
+            }
+            case KeyEvent.VK_Q -> {
+                moveCamera(0,-5,0);
+            }
+            case KeyEvent.VK_E -> {
+                moveCamera(0,5,0);
             }
             case KeyEvent.VK_I -> {
                 rotateCamera(0.0349066F, 1);
@@ -161,13 +140,32 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         zoomCamera((float) (scrollAmount * 0.35), scrollType);
     }
 
+//    private void moveCameraMouse(float difX, float difY, float difZ) {
+//        Camera camera = mainFrame.getSelectedCamera();
+//        Vector3f change = camera.getPosition();
+//        Vector3f changeT = camera.getTarget();
+//        camera.movePosSet(new Vector3f(change.x + difX, change.y + difY, change.z + difZ));
+//        camera.moveTargSet(new Vector3f(changeT.x + difX, changeT.y + difY, changeT.z + difZ));
+//    mainFrame.render();
+//    }
     private void moveCamera(float difX, float difY, float difZ) {
         Camera camera = mainFrame.getSelectedCamera();
-        Vector3f change = camera.getPosition();
-        Vector3f changeT = camera.getTarget();
-        camera.movePosSet(new Vector3f(change.x + difX, change.y + difY, change.z + difZ));
-        camera.moveTargSet(new Vector3f(changeT.x + difX, changeT.y + difY, changeT.z + difZ));
-    mainFrame.render();
+        Vector3f resultZ = camera.getTarget().cpy().sub(camera.getPosition());
+        Vector3f resultX = new Vector3f(0, 1, 0).crs(resultZ);
+        Vector3f resultY = resultZ.cpy().crs(resultX);
+
+        resultX.nor();
+        resultY.nor();
+        resultZ.nor();
+
+        camera.setPosition(camera.getPosition().add(resultX.cpy().scl(-difX)));
+        camera.setPosition(camera.getPosition().add(resultY.cpy().scl(difY)));
+        camera.setPosition(camera.getPosition().add(resultZ.cpy().scl(difZ)));
+        camera.setTarget(camera.getTarget().add(resultX.cpy().scl(-difX)));
+        camera.setTarget(camera.getTarget().add(resultY.cpy().scl(difY)));
+        camera.setTarget(camera.getTarget().add(resultZ.cpy().scl(difZ)));
+
+        mainFrame.render();
     }
 
     private void rotateCamera(float arc, int rType) {
@@ -180,21 +178,44 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
         float cosNegat = (float) Math.cos(-arc);
 
         switch (rType) {
-            case 1:
+            case 1 -> {
                 camera.movePosSet(new Vector3f(change.x, change.y * cos - change.z * sin, change.y * sin + change.z * cos));
-                break;
-            case 2:
+                camera.moveTargSet(new Vector3f(changeT.x, changeT.y * cos - changeT.z * sin, changeT.y * sin + changeT.z * cos));
+            }
+            case 2 -> {
                 camera.movePosSet(new Vector3f(change.x * cos + change.z * sin, change.y, -change.x * sin + change.z * cos));
-                break;
-            case 3:
+                camera.moveTargSet(new Vector3f(changeT.x * cos + changeT.z * sin, changeT.y, -changeT.x * sin + changeT.z * cos));
+            }
+            case 3 -> {
                 camera.movePosSet(new Vector3f(change.x, change.y * cosNegat - change.z * sinNegat, change.y * sinNegat + change.z * cosNegat));
-
-                break;
-            case 4:
+                camera.moveTargSet(new Vector3f(changeT.x, changeT.y * cosNegat - changeT.z * sinNegat, changeT.y * sinNegat + changeT.z * cosNegat));
+            }
+            case 4 -> {
                 camera.movePosSet(new Vector3f(change.x * cosNegat + change.z * sinNegat, change.y, -change.x * sinNegat + change.z * cosNegat));
-
-                break;
+                camera.moveTargSet(new Vector3f(changeT.x * cosNegat + changeT.z * sinNegat, changeT.y, -changeT.x * sinNegat + changeT.z * cosNegat));
+            }
         }
+        mainFrame.render();
+    }
+    private void rotateCameraMouse(float radX, float radY, float radZ) {
+        Camera camera = mainFrame.getSelectedCamera();
+        Vector3f resultZ = camera.getTarget().cpy().sub(camera.getPosition());
+        Vector3f resultX = new Vector3f(0, 1, 0).crs(resultZ);
+        Vector3f resultY = resultZ.cpy().crs(resultX);
+
+
+        resultY.nor();
+        resultX.nor();
+        resultZ.nor();
+        System.out.println(camera);
+        Vector3f v3f = camera.getTarget().cpy().sub(camera.getPosition());
+//        Vector3f v3 =new Vector3f();
+//        v3.y = (float) (v3f.y * Math.cos(radX) - v3f.z * Math.sin(radX));
+//        v3.z = (float) (v3f.y * Math.sin(radX) + v3f.z * Math.cos(radX));
+//        v3f = AffineTransformations.rotateY(v3f, radX);
+        camera.setTarget(AffineTransformations.rotateX(v3f, radY).add(camera.getPosition()));
+//        camera.setTarget(camera.getTarget().add(resultY.cpy().scl((float) Math.cos(radY))));
+
 
         mainFrame.render();
     }

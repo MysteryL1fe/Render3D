@@ -4,9 +4,9 @@ import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector4f;
+import com.edu.vsu.prilepin.maxim.MainFrame;
 
 public class GraphicConveyor {
-
     public static Matrix4f rotateScaleTranslate() {
         float[] matrix = new float[]{
                 1, 0, 0, 0,
@@ -78,5 +78,18 @@ public class GraphicConveyor {
 
     public static Vector2f vertexToPoint(final Vector3f vertex, final int width, final int height) {
         return new Vector2f(vertex.x * width + width / 2.0F, -vertex.y * height + height / 2.0F);
+    }
+    public static Vector2f convertToCenterOrigin(int x, int y) {
+        // Получаем размеры экрана (здесь используем фиксированные значения, замените на актуальные)
+        int screenWidth = 900;
+        int screenHeight = 700;
+
+        // Переводим координаты, чтобы центр стал (0, 0)
+        int centerX = screenWidth / 2;
+        int centerY = screenHeight / 2;
+        int convertedX = x - centerX;
+        int convertedY = centerY - y; // Инвертируем y для системы координат, где y растет вниз
+
+        return new Vector2f(convertedX, convertedY);
     }
 }

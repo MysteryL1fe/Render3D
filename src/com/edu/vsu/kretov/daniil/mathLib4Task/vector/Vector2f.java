@@ -7,7 +7,6 @@ import java.util.Objects;
 /**
  * A mutable two-dimensional float vector.
  *
- * @author Alexander Laptev
  */
 public class Vector2f implements Vector<Vector2f> {
     /**

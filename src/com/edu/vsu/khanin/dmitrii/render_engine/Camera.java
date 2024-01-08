@@ -98,4 +98,16 @@ public class Camera {
     private float aspectRatio;
     private float nearPlane;
     private float farPlane;
+
+    @Override
+    public String toString() {
+        return "Camera{" +
+                "position=" + position +
+                ", target=" + target +
+                ", fov=" + fov +
+                ", aspectRatio=" + aspectRatio +
+                ", nearPlane=" + nearPlane +
+                ", farPlane=" + farPlane +
+                '}';
+    }
 }

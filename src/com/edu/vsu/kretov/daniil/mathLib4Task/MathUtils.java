@@ -6,7 +6,6 @@ import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 /**
  * Common math operations.
  *
- * @author Daniil Kretov
  */
 public class MathUtils {
     /**

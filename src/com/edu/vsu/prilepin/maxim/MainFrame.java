@@ -364,18 +364,22 @@ public class MainFrame extends JFrame {
         helpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "W - движение камеры вперёд\n" +
-                        "\n" +
-                        "A - движение камеры влево\n" +
-                        "\n" +
-                        "S - движение камеры назад\n" +
-                        "\n" +
-                        "D - движение камеры вправо\n" +
-                        "\n" +
-                        "I, J, K, L - вращение камеры вокруг разных осей\n" +
-                        "\n" +
-                        "Колесо мыши - изменение масштаба камеры\n" +
-                        "\n");
+                JOptionPane.showMessageDialog(null, """
+                        W - движение камеры вперёд
+
+                        A - движение камеры влево
+
+                        S - движение камеры назад
+
+                        D - движение камеры вправо
+                        Q - движение камеры вниз
+                        E - движение камеры вверх
+
+                        I, J, K, L - вращение камеры вокруг разных осей
+
+                        Колесо мыши - изменение масштаба камеры
+
+                        """);
             }
         });
 

@@ -8,7 +8,6 @@ import java.util.Objects;
 /**
  * A mutable three-dimensional float vector.
  *
- * @author Daniil Kretov
  */
 public class Vector3f implements Vector<Vector3f> {
     /**
