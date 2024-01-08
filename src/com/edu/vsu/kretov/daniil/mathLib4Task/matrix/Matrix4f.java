@@ -1,5 +1,6 @@
 package com.edu.vsu.kretov.daniil.mathLib4Task.matrix;
 
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector4f;
 
 import java.util.Arrays;
@@ -393,4 +394,48 @@ public class Matrix4f implements Matrix<Matrix4f> {
     public int hashCode() {
         return Arrays.hashCode(val);
     }
+    public static Matrix4f rotationXYZ(float radRotateX, float radRotateY, float radRotateZ) {
+        Matrix4f result = new Matrix4f();
+
+        float cosX = (float) Math.cos(radRotateX);
+        float sinX = (float) Math.sin(radRotateX);
+        float cosY = (float) Math.cos(radRotateY);
+        float sinY = (float) Math.sin(radRotateY);
+        float cosZ = (float) Math.cos(radRotateZ);
+        float sinZ = (float) Math.sin(radRotateZ);
+
+        // Rotation around X-axis
+        float[] rotationX = {
+                1, 0, 0, 0,
+                0, cosX, -sinX, 0,
+                0, sinX, cosX, 0,
+                0, 0, 0, 1
+        };
+        result.set(rotationX);
+
+        // Rotation around Y-axis
+        float[] rotationY = {
+                cosY, 0, sinY, 0,
+                0, 1, 0, 0,
+                -sinY, 0, cosY, 0,
+                0, 0, 0, 1
+        };
+        Matrix4f m = new Matrix4f();
+        m.set(rotationY);
+        result.mul(m);
+
+        // Rotation around Z-axis
+        float[] rotationZ = {
+                cosZ, -sinZ, 0, 0,
+                sinZ, cosZ, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+        };
+        Matrix4f ma = new Matrix4f();
+        ma.set(rotationZ);
+        result.mul(ma);
+
+        return result;
+    }
+
 }

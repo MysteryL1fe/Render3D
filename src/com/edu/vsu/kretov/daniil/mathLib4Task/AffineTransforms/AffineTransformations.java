@@ -85,7 +85,7 @@ public class AffineTransformations {
     }
 
     // Вспомогательный метод для поворота точки вокруг оси X
-    private static Vector3f rotateX(Vector3f point, float angle) {
+    public static Vector3f rotateX(Vector3f point, float angle) {
         float sinA = (float) Math.sin(angle);
         float cosA = (float) Math.cos(angle);
 
@@ -96,7 +96,7 @@ public class AffineTransformations {
     }
 
     // Вспомогательный метод для поворота точки вокруг оси Y
-    private static Vector3f rotateY(Vector3f point, float angle) {
+    public static Vector3f rotateY(Vector3f point, float angle) {
         float sinA = (float) Math.sin(angle);
         float cosA = (float) Math.cos(angle);
 
@@ -107,7 +107,7 @@ public class AffineTransformations {
     }
 
     // Вспомогательный метод для поворота точки вокруг оси Z
-    private static Vector3f rotateZ(Vector3f point, float angle) {
+    public static Vector3f rotateZ(Vector3f point, float angle) {
         float sinA = (float) Math.sin(angle);
         float cosA = (float) Math.cos(angle);
 

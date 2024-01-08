@@ -3,9 +3,10 @@ package com.edu.vsu.khanin.dmitrii.render_engine;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector2f;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
+import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector4f;
+import com.edu.vsu.prilepin.maxim.MainFrame;
 
 public class GraphicConveyor {
-
     public static Matrix4f rotateScaleTranslate() {
         float[] matrix = new float[]{
                 1, 0, 0, 0,
@@ -35,6 +36,22 @@ public class GraphicConveyor {
                 -resultX.dot(eye), -resultY.dot(eye), -resultZ.dot(eye), 1};
         return new Matrix4f(matrix);
     }
+    public static Vector3f worldToLocal(Vector3f worldPos, Matrix4f viewMatrix) {
+        Matrix4f inverseViewMatrix = new Matrix4f(viewMatrix).inv();
+
+        // Создаем 4-мерный вектор с x, y, z координатами мировой позиции и 1 в w
+        Vector4f worldPosHomogeneous = new Vector4f(worldPos.x, worldPos.y, worldPos.z, 1.0f);
+
+        // Умножаем вектор мировой позиции на обратную матрицу вида
+        Vector4f localPosHomogeneous = inverseViewMatrix.mul(worldPosHomogeneous);
+
+        // Делим на w, чтобы получить 3-мерные локальные координаты
+        localPosHomogeneous.div(localPosHomogeneous.w);
+
+        // Создаем и возвращаем 3-мерный вектор локальных координат
+        return new Vector3f(localPosHomogeneous.x, localPosHomogeneous.y, localPosHomogeneous.z);
+    }
+
 
     public static Matrix4f perspective(
             final float fov,
@@ -61,5 +78,18 @@ public class GraphicConveyor {
 
     public static Vector2f vertexToPoint(final Vector3f vertex, final int width, final int height) {
         return new Vector2f(vertex.x * width + width / 2.0F, -vertex.y * height + height / 2.0F);
+    }
+    public static Vector2f convertToCenterOrigin(int x, int y) {
+        // Получаем размеры экрана (здесь используем фиксированные значения, замените на актуальные)
+        int screenWidth = 900;
+        int screenHeight = 700;
+
+        // Переводим координаты, чтобы центр стал (0, 0)
+        int centerX = screenWidth / 2;
+        int centerY = screenHeight / 2;
+        int convertedX = x - centerX;
+        int convertedY = centerY - y; // Инвертируем y для системы координат, где y растет вниз
+
+        return new Vector2f(convertedX, convertedY);
     }
 }
