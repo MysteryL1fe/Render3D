@@ -519,7 +519,7 @@ public class MainFrame extends JFrame {
         try {
             ModelInScene light = new ModelInScene(
                     new Light(PrepareModel.prepareModel(
-                            ObjReader.read(Path.of("src/com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
+                            ObjReader.read(Path.of("com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
                     ), Color.RED),
                     "red light", new Vector3f(0, 0, 0),
                     new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), Color.RED
@@ -530,7 +530,7 @@ public class MainFrame extends JFrame {
 
             light = new ModelInScene(
                     new Light(PrepareModel.prepareModel(
-                            ObjReader.read(Path.of("src/com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
+                            ObjReader.read(Path.of("com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
                     ), Color.GREEN),
                     "green light", new Vector3f(0, 0, 0),
                     new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), Color.GREEN
@@ -541,7 +541,7 @@ public class MainFrame extends JFrame {
 
             light = new ModelInScene(
                     new Light(PrepareModel.prepareModel(
-                            ObjReader.read(Path.of("src/com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
+                            ObjReader.read(Path.of("com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
                     ), Color.BLUE),
                     "blue light", new Vector3f(0, 0, 0),
                     new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), Color.BLUE

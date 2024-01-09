@@ -150,10 +150,11 @@ public class Viewport extends JPanel implements MouseListener, KeyListener, Mous
 
     private void zoomCamera(float scale, double scrlType) {
         Camera camera = mainFrame.getSelectedCamera();
+        Vector3f pos = camera.getPosition();
         if (scrlType == 1.0)
-            camera.movePosition(new Vector3f((scale), (scale), (scale)));
-        else if (camera.getPosition().y >= 30)
-            camera.movePosition(new Vector3f(-(1 / scale), -(1 / scale), -(1 / scale)));
+            camera.movePosSet(pos.scl(scale));
+        else
+            camera.movePosSet(pos.scl(-1/scale));
         mainFrame.render();
     }
 }

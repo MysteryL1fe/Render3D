@@ -126,20 +126,16 @@ public class AffineTransformations {
             rotate(resModel, model.getRotation().x, model.getRotation().y, model.getRotation().z);
         translate(resModel.vertices, model.getPosition().x, model.getPosition().y, model.getPosition().z);
 
-        for (int i = 0; i < resModel.normals.size(); i++) {
-            resModel.normals.set(
-                    i,
-                    rotateZ(
-                            rotateY(
-                                    rotateX(
-                                            resModel.normals.get(i),
-                                            model.getRotation().x
-                                    ),
-                                    model.getRotation().y
-                            ),
-                            model.getRotation().z
-                    ).nor());
-        }
+        resModel.normals.replaceAll(point -> rotateZ(
+                rotateY(
+                        rotateX(
+                                point,
+                                model.getRotation().x
+                        ),
+                        model.getRotation().y
+                ),
+                model.getRotation().z
+        ).nor());
 
         return resModel;
     }
