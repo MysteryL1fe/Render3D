@@ -15,13 +15,13 @@ public class ModelInScene {
     private Color color;
     private Path path;
 
-    public ModelInScene(Model model, String modelName, Vector3f position, Vector3f rotation, Vector3f scale) {
+    public ModelInScene(Model model, String modelName, Vector3f position, Vector3f rotation, Vector3f scale, Color color) {
         this.model = model;
         this.modelName = modelName;
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
-        this.color = Color.RED;
+        this.color = color;
     }
 
     public String getModelName() {

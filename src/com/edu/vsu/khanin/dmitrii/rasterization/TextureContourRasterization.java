@@ -22,10 +22,10 @@ import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.multiplyM
 
 public class TextureContourRasterization implements RasterizationAlgorithm {
     @Override
-    public HashSet<RasterizationAlgorithm.ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
-                                                                    Matrix4f mVPMatrix, int width, int height) {
-        HashSet<RasterizationAlgorithm.ColorPixel> colorPixels = new HashSet<>();
-        HashMap<RasterizationAlgorithm.Pixel, ZBufferColor> zBuffer = new HashMap<>();
+    public HashSet<ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
+                                             ArrayList<ModelInScene> lights, Matrix4f mVPMatrix, int width, int height) {
+        HashSet<ColorPixel> colorPixels = new HashSet<>();
+        HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
         for (ModelInScene model : sceneModels) {
             Model mesh = AffineTransformations.makeInWorldCoord(model);
@@ -83,7 +83,7 @@ public class TextureContourRasterization implements RasterizationAlgorithm {
 
                         if (Math.abs(z) > 1) continue;
 
-                        RasterizationAlgorithm.Pixel pixel = new RasterizationAlgorithm.Pixel(x, y);
+                        Pixel pixel = new Pixel(x, y);
                         if (zBuffer.containsKey(pixel) && zBuffer.get(pixel).zBuffer < z) continue;
 
                         int red, green, blue;
@@ -136,8 +136,8 @@ public class TextureContourRasterization implements RasterizationAlgorithm {
             }
         }
 
-        for (RasterizationAlgorithm.Pixel pixel : zBuffer.keySet())
-            colorPixels.add(new RasterizationAlgorithm.ColorPixel(pixel, zBuffer.get(pixel).color));
+        for (Pixel pixel : zBuffer.keySet())
+            colorPixels.add(new ColorPixel(pixel, zBuffer.get(pixel).color));
 
         return colorPixels;
     }

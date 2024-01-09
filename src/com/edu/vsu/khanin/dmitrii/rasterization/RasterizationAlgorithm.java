@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public interface RasterizationAlgorithm {
     HashSet<ColorPixel> rasterization(final Camera camera, final ArrayList<ModelInScene> sceneModels,
-                                      Matrix4f mVPMatrix, int width, int height);
+                                      ArrayList<ModelInScene> lights, Matrix4f mVPMatrix, int width, int height);
 
     class Pixel {
         public int x, y;

@@ -19,7 +19,7 @@ import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.multiplyM
 public class LightColorContourRasterization implements RasterizationAlgorithm {
     @Override
     public HashSet<ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
-                                             Matrix4f mVPMatrix, int width, int height) {
+                                             ArrayList<ModelInScene> lights, Matrix4f mVPMatrix, int width, int height) {
         HashSet<ColorPixel> colorPixels = new HashSet<>();
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 
@@ -98,6 +98,22 @@ public class LightColorContourRasterization implements RasterizationAlgorithm {
                                 red = (int) (red * (1 - k) + (red * k * l));
                                 green = (int) (green * (1 - k) + (green * k * l));
                                 blue = (int) (blue * (1 - k) + (blue * k * l));
+                            }
+
+                            Vector3f point = new Vector3f(
+                                    v1.x * barycentricCoords.x + v2.x * barycentricCoords.y + v3.x * barycentricCoords.z,
+                                    v1.y * barycentricCoords.x + v2.y * barycentricCoords.y + v3.y * barycentricCoords.z,
+                                    v1.z * barycentricCoords.x + v2.z * barycentricCoords.y + v3.z * barycentricCoords.z
+                            );
+
+                            for (ModelInScene light : lights) {
+                                Vector3f lightRay = point.cpy().sub(light.getPosition()).nor();
+                                l = -n.cpy().dot(lightRay);
+
+                                if (l < 0) continue;
+                                red = Math.min((int) (red + light.getColor().getRed() * k * l), 255);
+                                green = Math.min((int) (green + light.getColor().getGreen() * k * l), 255);
+                                blue = Math.min((int) (blue + light.getColor().getBlue() * k * l), 255);
                             }
                         }
 

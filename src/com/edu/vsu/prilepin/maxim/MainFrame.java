@@ -1,5 +1,6 @@
 package com.edu.vsu.prilepin.maxim;
 
+import com.edu.vsu.khanin.dmitrii.Light;
 import com.edu.vsu.khanin.dmitrii.exceptions.TooLowVerticesException;
 import com.edu.vsu.khanin.dmitrii.preparation.PrepareModel;
 import com.edu.vsu.kretov.daniil.mathLib4Task.vector.Vector3f;
@@ -32,6 +33,7 @@ public class MainFrame extends JFrame {
     private final DefaultListModel<String> modelList;
     private final JList<String> jModelList;
     private final ArrayList<ModelInScene> sceneModels;
+    private final ArrayList<ModelInScene> lights;
     private ModelInScene selectedModel;
     private final JList<String> jCamList;
     private final DefaultListModel<String> camList;
@@ -64,6 +66,7 @@ public class MainFrame extends JFrame {
         setLayout(null);
 
         sceneModels = new ArrayList<>();
+        lights = new ArrayList<>();
         cameras = new ArrayList<>();
 
         modelList = new DefaultListModel<>();
@@ -439,7 +442,8 @@ public class MainFrame extends JFrame {
                     try {
                         ModelInScene newModel = new ModelInScene(
                                 PrepareModel.prepareModel(ObjReader.read(Path.of(filePath))),
-                                selectedFile.getName(), defaultPosition, defaultRotation, defaultScale
+                                selectedFile.getName(), defaultPosition, defaultRotation, defaultScale,
+                                Color.RED
                         );
 
                         sceneModels.add(newModel);
@@ -512,6 +516,43 @@ public class MainFrame extends JFrame {
                 1, 1, 0.1f, 1000
         ));
 
+        try {
+            ModelInScene light = new ModelInScene(
+                    new Light(PrepareModel.prepareModel(
+                            ObjReader.read(Path.of("src/com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
+                    ), Color.RED),
+                    "red light", new Vector3f(0, 0, 0),
+                    new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), Color.RED
+            );
+            sceneModels.add(light);
+            modelList.addElement("red light");
+            lights.add(light);
+
+            light = new ModelInScene(
+                    new Light(PrepareModel.prepareModel(
+                            ObjReader.read(Path.of("src/com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
+                    ), Color.GREEN),
+                    "green light", new Vector3f(0, 0, 0),
+                    new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), Color.GREEN
+            );
+            sceneModels.add(light);
+            modelList.addElement("green light");
+            lights.add(light);
+
+            light = new ModelInScene(
+                    new Light(PrepareModel.prepareModel(
+                            ObjReader.read(Path.of("src/com/edu/vsu/khanin/dmitrii/meshes/sphere.obj"))
+                    ), Color.BLUE),
+                    "blue light", new Vector3f(0, 0, 0),
+                    new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), Color.BLUE
+            );
+            sceneModels.add(light);
+            modelList.addElement("blue light");
+            lights.add(light);
+        } catch (TooLowVerticesException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
@@ -573,7 +614,7 @@ public class MainFrame extends JFrame {
     }
 
     public void render() {
-        RenderEngine.render(viewport, selectedCamera, sceneModels, renderState);
+        RenderEngine.render(viewport, selectedCamera, sceneModels, lights, renderState);
     }
 
     private void calcRenderState() {

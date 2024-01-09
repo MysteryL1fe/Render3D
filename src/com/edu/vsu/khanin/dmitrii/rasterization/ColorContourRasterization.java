@@ -19,7 +19,7 @@ import static com.edu.vsu.khanin.dmitrii.render_engine.GraphicConveyor.multiplyM
 public class ColorContourRasterization implements RasterizationAlgorithm {
     @Override
     public HashSet<ColorPixel> rasterization(final Camera camera, ArrayList<ModelInScene> sceneModels,
-                                             Matrix4f mVPMatrix, int width, int height) {
+                                             ArrayList<ModelInScene> lights, Matrix4f mVPMatrix, int width, int height) {
         HashSet<ColorPixel> colorPixels = new HashSet<>();
         HashMap<Pixel, ZBufferColor> zBuffer = new HashMap<>();
 

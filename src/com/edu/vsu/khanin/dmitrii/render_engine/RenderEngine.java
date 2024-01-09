@@ -1,5 +1,6 @@
 package com.edu.vsu.khanin.dmitrii.render_engine;
 
+import com.edu.vsu.khanin.dmitrii.Light;
 import com.edu.vsu.khanin.dmitrii.rasterization.*;
 import com.edu.vsu.kretov.daniil.mathLib4Task.matrix.Matrix4f;
 import com.edu.vsu.prilepin.maxim.model.ModelInScene;
@@ -13,8 +14,8 @@ public class RenderEngine {
     private static RenderThread renderThread;
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
-                              RenderState renderState) {
-        render(viewport, camera, sceneModels, switch (renderState) {
+                              ArrayList<ModelInScene> lights, RenderState renderState) {
+        render(viewport, camera, sceneModels, lights, switch (renderState) {
             case NONE -> null;
             case CONTOUR -> new ContourRasterization();
             case COLOR -> new ColorRasterization();
@@ -29,13 +30,13 @@ public class RenderEngine {
     }
 
     public static void render(final Viewport viewport, final Camera camera, final ArrayList<ModelInScene> sceneModels,
-                              RasterizationAlgorithm rasterizationAlgorithm) {
+                              ArrayList<ModelInScene> lights, RasterizationAlgorithm rasterizationAlgorithm) {
         if (renderThread != null) renderThread.stopRender();
         
         viewport.clear();
 
         if (rasterizationAlgorithm == null) return;
-        renderThread = new RenderThread(viewport, camera, sceneModels, rasterizationAlgorithm);
+        renderThread = new RenderThread(viewport, camera, sceneModels, lights, rasterizationAlgorithm);
         renderThread.start();
     }
 
@@ -44,13 +45,15 @@ public class RenderEngine {
         private final Viewport viewport;
         private final Camera camera;
         private final ArrayList<ModelInScene> sceneModels;
+        private final ArrayList<ModelInScene> lights;
         private final RasterizationAlgorithm rasterizationAlgorithm;
 
         public RenderThread(Viewport viewport, Camera camera, ArrayList<ModelInScene> sceneModels,
-                            RasterizationAlgorithm rasterizationAlgorithm) {
+                            ArrayList<ModelInScene> lights, RasterizationAlgorithm rasterizationAlgorithm) {
             this.viewport = viewport;
             this.camera = camera;
             this.sceneModels = sceneModels;
+            this.lights = lights;
             this.rasterizationAlgorithm = rasterizationAlgorithm;
         }
 
@@ -67,7 +70,7 @@ public class RenderEngine {
             modelViewProjectionMatrix.mul(projectionMatrix);
 
             HashSet<RasterizationAlgorithm.ColorPixel> pixels = rasterizationAlgorithm.rasterization(
-                    camera, sceneModels, modelViewProjectionMatrix,
+                    camera, sceneModels, lights, modelViewProjectionMatrix,
                     viewport.getWidth(), viewport.getHeight()
             );
 
